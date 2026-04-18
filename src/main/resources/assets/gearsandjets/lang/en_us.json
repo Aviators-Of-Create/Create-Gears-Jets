@@ -1,0 +1,13 @@
+{
+  "itemGroup.gearsandjets": "Example Mod Tab",
+  "block.gearsandjets.example_block": "Example Block",
+  "item.gearsandjets.example_item": "Example Item",
+
+  "gearsandjets.configuration.title": "Create: Gears and Jets Configs",
+  "gearsandjets.configuration.section.gearsandjets.common.toml": "Create: Gears and Jets Configs",
+  "gearsandjets.configuration.section.gearsandjets.common.toml.title": "Create: Gears and Jets Configs",
+  "gearsandjets.configuration.items": "Item List",
+  "gearsandjets.configuration.logDirtBlock": "Log Dirt Block",
+  "gearsandjets.configuration.magicNumberIntroduction": "Magic Number Text",
+  "gearsandjets.configuration.magicNumber": "Magic Number"
+}
