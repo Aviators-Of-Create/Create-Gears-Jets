@@ -1,6 +1,8 @@
 {
-  "itemGroup.gearsandjets": "Example Mod Tab",
-  "block.gearsandjets.example_block": "Example Block",
+  "itemGroup.gearsandjets": "Create: Gears and Jets",
+  "block.gearsandjets.simple_intake": "Simple Intake",
+  "block.gearsandjets.simple_combustion_chamber": "Simple Combustion Chamber",
+  "block.gearsandjets.simple_exhaust": "Simple Exhaust",
   "item.gearsandjets.example_item": "Example Item",
 
   "gearsandjets.configuration.title": "Create: Gears and Jets Configs",
@@ -8,6 +10,7 @@
   "gearsandjets.configuration.section.gearsandjets.common.toml.title": "Create: Gears and Jets Configs",
   "gearsandjets.configuration.items": "Item List",
   "gearsandjets.configuration.logDirtBlock": "Log Dirt Block",
+  "gearsandjets.configuration.simpleCombustionChamberCapacity": "Simple Combustion Chamber Capacity",
   "gearsandjets.configuration.magicNumberIntroduction": "Magic Number Text",
   "gearsandjets.configuration.magicNumber": "Magic Number"
 }

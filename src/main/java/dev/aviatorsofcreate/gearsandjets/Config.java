@@ -34,6 +34,10 @@ public class Config {
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), () -> "", Config::validateItemName);
 
+    public static final ModConfigSpec.IntValue SIMPLE_COMBUSTION_CHAMBER_CAPACITY = BUILDER
+            .comment("Fluid capacity of the Simple Combustion Chamber in millibuckets.")
+            .defineInRange("simpleCombustionChamberCapacity", 500, 1, Integer.MAX_VALUE);
+
     static final ModConfigSpec SPEC = BUILDER.build();
 
     private static boolean validateItemName(final Object obj) {
