@@ -20,17 +20,17 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 public class CombustionChamberBlockEntity extends BlockEntity {
     private static final List<TagKey<Fluid>> ACCEPTED_FUEL_TAGS = List.of(
             fuelTag("forge:fuel"),
-            fuelTag("c:fuel")
-//            fuelTag("forge:diesel"),
-//            fuelTag("forge:biodiesel"),
-//            fuelTag("forge:gasoline"),
-//            fuelTag("forge:ethanol"),
-//            fuelTag("forge:plantoil"),
-//            fuelTag("c:diesel"),
-//            fuelTag("c:biodiesel"),
-//            fuelTag("c:gasoline"),
-//            fuelTag("c:ethanol"),
-//            fuelTag("c:plantoil")
+            fuelTag("c:fuel"),
+            fuelTag("forge:diesel"),
+            fuelTag("forge:biodiesel"),
+            fuelTag("forge:gasoline"),
+            fuelTag("forge:ethanol"),
+            fuelTag("forge:plantoil"),
+            fuelTag("c:diesel"),
+            fuelTag("c:biodiesel"),
+            fuelTag("c:gasoline"),
+            fuelTag("c:ethanol"),
+            fuelTag("c:plantoil")
     );
     private final FluidTank tank = new ConfigurableFluidTank();
 

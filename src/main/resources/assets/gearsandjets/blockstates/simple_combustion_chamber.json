@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "gearsandjets:block/simple_combustion_chamber"
+    },
+    "facing=east": {
+      "model": "gearsandjets:block/simple_combustion_chamber",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "gearsandjets:block/simple_combustion_chamber",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "gearsandjets:block/simple_combustion_chamber",
+      "y": 270
+    }
+  }
+}
