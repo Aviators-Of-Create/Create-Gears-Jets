@@ -1,22 +1,30 @@
 package dev.aviatorsofcreate.gearsandjets.block;
 
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import dev.aviatorsofcreate.gearsandjets.blockentity.CombustionChamberBlockEntity;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CombustionChamberBlock extends Block implements EntityBlock {
+public abstract class CombustionChamberBlock extends Block implements EntityBlock, IWrenchable {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     protected CombustionChamberBlock(BlockBehaviour.Properties properties) {
@@ -33,7 +41,47 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(FACING, context.getHorizontalDirection());
+        return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        Player player = context.getPlayer();
+
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return InteractionResult.SUCCESS;
+        }
+
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
+        NeoForge.EVENT_BUS.post(event);
+        if (event.isCanceled()) {
+            return InteractionResult.SUCCESS;
+        }
+
+        collectAttachedBlock(level, pos.relative(state.getValue(FACING)), player, context.getItemInHand(), serverLevel);
+        collectAttachedBlock(level, pos.relative(state.getValue(FACING).getOpposite()), player, context.getItemInHand(), serverLevel);
+
+        if (player != null && !player.isCreative()) {
+            Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos), player, context.getItemInHand())
+                    .forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
+        }
+
+        state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY, true);
+        level.destroyBlock(pos, false);
+        IWrenchable.playRemoveSound(level, pos);
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.isCreative()) {
+            destroyAttachedBlockWithoutDrops(level, pos.relative(state.getValue(FACING)));
+            destroyAttachedBlockWithoutDrops(level, pos.relative(state.getValue(FACING).getOpposite()));
+        }
+
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
@@ -49,5 +97,31 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+    }
+
+    private static void collectAttachedBlock(Level level, BlockPos attachedPos, @Nullable Player player, ItemStack tool, ServerLevel serverLevel) {
+        BlockState attachedState = level.getBlockState(attachedPos);
+        Block attachedBlock = attachedState.getBlock();
+        if (!(attachedBlock instanceof IntakeBlock) && !(attachedBlock instanceof ExhaustBlock)) {
+            return;
+        }
+
+        if (player != null && !player.isCreative()) {
+            Block.getDrops(attachedState, serverLevel, attachedPos, level.getBlockEntity(attachedPos), player, tool)
+                    .forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
+        }
+
+        attachedState.spawnAfterBreak(serverLevel, attachedPos, ItemStack.EMPTY, true);
+        level.destroyBlock(attachedPos, false);
+    }
+
+    private static void destroyAttachedBlockWithoutDrops(Level level, BlockPos attachedPos) {
+        BlockState attachedState = level.getBlockState(attachedPos);
+        Block attachedBlock = attachedState.getBlock();
+        if (!(attachedBlock instanceof IntakeBlock) && !(attachedBlock instanceof ExhaustBlock)) {
+            return;
+        }
+
+        level.destroyBlock(attachedPos, false);
     }
 }

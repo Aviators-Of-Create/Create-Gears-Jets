@@ -3,6 +3,7 @@
   "block.gearsandjets.simple_intake": "Simple Intake",
   "block.gearsandjets.simple_combustion_chamber": "Simple Combustion Chamber",
   "block.gearsandjets.simple_exhaust": "Simple Exhaust",
+  "block.gearsandjets.airplane_seat": "Airplane Seat",
   "item.gearsandjets.example_item": "Example Item",
 
   "gearsandjets.configuration.title": "Create: Gears and Jets Configs",

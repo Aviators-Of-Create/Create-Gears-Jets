@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "gearsandjets:block/simple_exhaust"
+    },
+    "facing=north": {
+      "model": "gearsandjets:block/simple_exhaust"
+    },
+    "facing=south": {
+      "model": "gearsandjets:block/simple_exhaust"
+    },
+    "facing=west": {
+      "model": "gearsandjets:block/simple_exhaust"
+    }
+  }
+}

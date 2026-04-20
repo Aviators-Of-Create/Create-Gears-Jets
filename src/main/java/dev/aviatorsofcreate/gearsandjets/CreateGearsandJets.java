@@ -3,6 +3,10 @@ package dev.aviatorsofcreate.gearsandjets;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
+import com.simibubi.create.content.contraptions.actors.seat.SeatInteractionBehaviour;
+import com.simibubi.create.content.contraptions.actors.seat.SeatMovementBehaviour;
 
 import dev.aviatorsofcreate.gearsandjets.item.ModItems;
 import dev.aviatorsofcreate.gearsandjets.block.ModBlocks;
@@ -50,6 +54,10 @@ public class CreateGearsandJets {
     private void commonSetup(FMLCommonSetupEvent event) {
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
+        event.enqueueWork(() -> {
+            MovementBehaviour.REGISTRY.register(ModBlocks.AIRPLANE_SEAT.get(), new SeatMovementBehaviour());
+            MovingInteractionBehaviour.REGISTRY.register(ModBlocks.AIRPLANE_SEAT.get(), new SeatInteractionBehaviour());
+        });
 
         if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
             LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));

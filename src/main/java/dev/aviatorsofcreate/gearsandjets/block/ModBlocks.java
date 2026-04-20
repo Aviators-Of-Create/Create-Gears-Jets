@@ -2,6 +2,7 @@ package dev.aviatorsofcreate.gearsandjets.block;
 
 import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -11,7 +12,7 @@ public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(CreateGearsandJets.MODID);
     public static final DeferredBlock<SimpleIntakeBlock> SIMPLE_INTAKE = BLOCKS.register(
             "simple_intake",
-            () -> new SimpleIntakeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE))
+            () -> new SimpleIntakeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).noOcclusion())
     );
     public static final DeferredBlock<SimpleCombustionChamberBlock> SIMPLE_COMBUSTION_CHAMBER = BLOCKS.register(
             "simple_combustion_chamber",
@@ -19,7 +20,15 @@ public final class ModBlocks {
     );
     public static final DeferredBlock<SimpleExhaustBlock> SIMPLE_EXHAUST = BLOCKS.register(
             "simple_exhaust",
-            () -> new SimpleExhaustBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY))
+            () -> new SimpleExhaustBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).noOcclusion())
+    );
+    public static final DeferredBlock<AirplaneSeatBlock> AIRPLANE_SEAT = BLOCKS.register(
+            "airplane_seat",
+            () -> new AirplaneSeatBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_GRAY)
+                    .strength(0.8F)
+                    .sound(SoundType.WOOL)
+                    .noOcclusion())
     );
 
     private ModBlocks() {

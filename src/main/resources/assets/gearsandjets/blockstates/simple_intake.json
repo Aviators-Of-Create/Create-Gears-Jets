@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "gearsandjets:block/simple_intake",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "gearsandjets:block/simple_intake",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "gearsandjets:block/simple_intake"
+    },
+    "facing=west": {
+      "model": "gearsandjets:block/simple_intake",
+      "y": 90
+    }
+  }
+}

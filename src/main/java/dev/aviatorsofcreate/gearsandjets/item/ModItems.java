@@ -17,6 +17,8 @@ public final class ModItems {
             registerBlockItem("simple_combustion_chamber", ModBlocks.SIMPLE_COMBUSTION_CHAMBER);
     public static final DeferredItem<BlockItem> SIMPLE_EXHAUST =
             registerBlockItem("simple_exhaust", ModBlocks.SIMPLE_EXHAUST);
+    public static final DeferredItem<BlockItem> AIRPLANE_SEAT =
+            registerBlockItem("airplane_seat", ModBlocks.AIRPLANE_SEAT);
 
     public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.register(
             "example_item",

@@ -1,5 +1,5 @@
 {
-  "parent": "gearsandjets:block/simple_combustion_chamber",
+  "parent": "gearsandjets:block/simple_exhaust",
   "display": {
     "thirdperson_righthand": {
       "rotation": [75, 45, 0],
