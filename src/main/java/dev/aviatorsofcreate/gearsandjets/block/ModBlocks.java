@@ -16,7 +16,10 @@ public final class ModBlocks {
     );
     public static final DeferredBlock<SimpleCombustionChamberBlock> SIMPLE_COMBUSTION_CHAMBER = BLOCKS.register(
             "simple_combustion_chamber",
-            () -> new SimpleCombustionChamberBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE), SableBlockWeight.HEAVY)
+            () -> new SimpleCombustionChamberBlock(
+                    BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).noOcclusion(),
+                    SableBlockWeight.HEAVY
+            )
     );
     public static final DeferredBlock<SimpleExhaustBlock> SIMPLE_EXHAUST = BLOCKS.register(
             "simple_exhaust",
