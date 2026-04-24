@@ -19,10 +19,16 @@ import net.minecraft.world.level.LevelReader;
 
 public abstract class IntakeBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    private final SableBlockWeight sableBlockWeight;
 
-    protected IntakeBlock(BlockBehaviour.Properties properties) {
+    protected IntakeBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties);
+        this.sableBlockWeight = sableBlockWeight;
         registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
+
+    public SableBlockWeight getSableBlockWeight() {
+        return sableBlockWeight;
     }
 
     @Override

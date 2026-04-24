@@ -26,13 +26,19 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class CombustionChamberBlock extends Block implements EntityBlock, IWrenchable {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    private final SableBlockWeight sableBlockWeight;
 
-    protected CombustionChamberBlock(BlockBehaviour.Properties properties) {
+    protected CombustionChamberBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties);
+        this.sableBlockWeight = sableBlockWeight;
         registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     public abstract int getTankCapacity();
+
+    public SableBlockWeight getSableBlockWeight() {
+        return sableBlockWeight;
+    }
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

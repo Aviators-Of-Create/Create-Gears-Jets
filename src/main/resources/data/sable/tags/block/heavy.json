@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "gearsandjets:simple_intake",
+    "gearsandjets:simple_combustion_chamber",
+    "gearsandjets:simple_exhaust"
+  ]
+}

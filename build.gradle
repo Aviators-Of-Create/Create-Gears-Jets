@@ -155,9 +155,11 @@ dependencies {
     compileOnly("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_version}") {
         transitive = false
     }
-    compileOnly("dev.eriksonn.aeronautics:aeronautics-neoforge-${minecraft_version}:${aeronautics_api_version}") {
-        transitive = false
-    }
+
+    // We don't need Aeronautics as a dependency at the current point, but leaving it here for potential future use
+    //compileOnly("dev.eriksonn.aeronautics:aeronautics-neoforge-${minecraft_version}:${aeronautics_api_version}") {
+    //    transitive = false
+    //}
 
     localRuntime("com.simibubi.create:create-${minecraft_version}:${create_version}") {
         transitive = false

@@ -4,8 +4,8 @@ import dev.aviatorsofcreate.gearsandjets.Config;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class SimpleCombustionChamberBlock extends CombustionChamberBlock {
-    public SimpleCombustionChamberBlock(BlockBehaviour.Properties properties) {
-        super(properties);
+    public SimpleCombustionChamberBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
+        super(properties, sableBlockWeight);
     }
 
     @Override

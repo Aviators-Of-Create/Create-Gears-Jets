@@ -12,15 +12,15 @@ public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(CreateGearsandJets.MODID);
     public static final DeferredBlock<SimpleIntakeBlock> SIMPLE_INTAKE = BLOCKS.register(
             "simple_intake",
-            () -> new SimpleIntakeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).noOcclusion())
+            () -> new SimpleIntakeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).noOcclusion(), SableBlockWeight.HEAVY)
     );
     public static final DeferredBlock<SimpleCombustionChamberBlock> SIMPLE_COMBUSTION_CHAMBER = BLOCKS.register(
             "simple_combustion_chamber",
-            () -> new SimpleCombustionChamberBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE))
+            () -> new SimpleCombustionChamberBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE), SableBlockWeight.HEAVY)
     );
     public static final DeferredBlock<SimpleExhaustBlock> SIMPLE_EXHAUST = BLOCKS.register(
             "simple_exhaust",
-            () -> new SimpleExhaustBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).noOcclusion())
+            () -> new SimpleExhaustBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).noOcclusion(), SableBlockWeight.HEAVY)
     );
     public static final DeferredBlock<AirplaneSeatBlock> AIRPLANE_SEAT = BLOCKS.register(
             "airplane_seat",
