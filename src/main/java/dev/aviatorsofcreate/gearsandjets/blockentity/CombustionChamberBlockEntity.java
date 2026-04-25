@@ -67,11 +67,11 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
                 break;
             case IDLING:
                 this.active = true;
-                thrust = 400 * this.signal / ( 15 * 3.156925 );
+                thrust = 200 * this.signal / ( 15 * 3.156925 );
                 break;
             case RUNNING:
                 this.active = true;
-                thrust = 400 * Math.pow((double) this.signal / 15, 3.5);
+                thrust = 200 * Math.pow((double) this.signal / 15, 3.5);
                 break;
             default:
                 throw new IllegalStateException("Jet engine has invalid blockstate!");
@@ -135,7 +135,7 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
 
     @Override
     public Direction getBlockDirection() {
-        return this.getBlockState().getValue(CombustionChamberBlock.FACING);
+        return this.getBlockState().getValue(CombustionChamberBlock.FACING).getOpposite();
     }
 
     @Override
