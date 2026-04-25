@@ -159,16 +159,6 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
         double spreadScale = 0.05D + Math.min(fuelConsumed, 10) * 0.01D;
         double speedScale = 0.006D + Math.min(fuelConsumed, 10) * 0.0008D;
 
-        for (int i = 0; i < segments; i++) {
-            double distance = i * 0.26D;
-            double x = baseX + dirX * distance;
-            double y = baseY + i * 0.015D;
-            double z = baseZ + dirZ * distance;
-
-            level.sendParticles(ParticleTypes.LARGE_SMOKE, x, y, z, largeSmokeCount, spreadScale, 0.04D, spreadScale, speedScale);
-            level.sendParticles(ParticleTypes.SMOKE, x, y, z, smokeCount, spreadScale * 0.65D, 0.03D, spreadScale * 0.65D, speedScale * 0.85D);
-        }
-
         for (int i = 0; i < Math.min(2, segments); i++) {
             double distance = i * 0.2D;
             double x = baseX + dirX * distance;
