@@ -83,15 +83,26 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
         double baseY = exhaustPos.getY() + 0.55D;
         double baseZ = exhaustPos.getZ() + 0.5D + dirZ * 0.45D;
 
-        for (int i = 0; i < 4; i++) {
-            double distance = i * 0.28D;
+        for (int i = 0; i < 6; i++) {
+            double distance = i * 0.24D;
             double x = baseX + dirX * distance;
-            double y = baseY + i * 0.01D;
+            double y = baseY + i * 0.015D;
             double z = baseZ + dirZ * distance;
-            level.sendParticles(ParticleTypes.CLOUD, x, y, z, 4, 0.07D, 0.05D, 0.07D, 0.003D);
+
+            level.sendParticles(ParticleTypes.LARGE_SMOKE, x, y, z, 4, 0.09D, 0.06D, 0.09D, 0.01D);
+            level.sendParticles(ParticleTypes.SMOKE, x, y, z, 3, 0.06D, 0.04D, 0.06D, 0.008D);
         }
 
-        level.sendParticles(ParticleTypes.SMOKE, baseX, baseY, baseZ, 1, 0.015D, 0.015D, 0.015D, 0.005D);
+        for (int i = 0; i < 3; i++) {
+            double distance = i * 0.18D;
+            double x = baseX + dirX * distance;
+            double y = baseY + 0.02D + i * 0.01D;
+            double z = baseZ + dirZ * distance;
+            level.sendParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, x, y, z, 2, 0.03D, 0.02D, 0.03D, 0.01D);
+        }
+
+        level.sendParticles(ParticleTypes.LARGE_SMOKE, baseX, baseY, baseZ, 5, 0.12D, 0.08D, 0.12D, 0.012D);
+        level.sendParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, baseX, baseY, baseZ, 2, 0.05D, 0.03D, 0.05D, 0.01D);
     }
 
     @Override
