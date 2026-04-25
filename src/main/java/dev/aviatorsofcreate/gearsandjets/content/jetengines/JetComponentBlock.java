@@ -88,31 +88,31 @@ public abstract class JetComponentBlock extends Block implements EntityBlock, IW
         return (facingAway instanceof JetComponentBlock || facing instanceof JetComponentBlock);
     }
 
-    private static ArrayList<JetComponentBlock> getAttachedComponentsRecursive(Level level, BlockPos pos, Direction direction, JetComponentBlock thisBlock) {
+    private static ArrayList<BlockState> getAttachedComponentsRecursive(Level level, BlockPos pos, Direction direction, BlockState thisBlock) {
 
-        Block nextComponent = level.getBlockState(pos.relative(direction)).getBlock();
-        ArrayList<JetComponentBlock> attachedAfter = new ArrayList<>();
+        BlockState nextComponent = level.getBlockState(pos.relative(direction));
+        ArrayList<BlockState> attachedAfter = new ArrayList<>();
         attachedAfter.add(thisBlock);
 
-        if (nextComponent instanceof JetComponentBlock block) {
-           attachedAfter.addAll(getAttachedComponentsRecursive(level, pos.relative(direction), direction, block));
+        if (nextComponent.getBlock() instanceof JetComponentBlock) {
+           attachedAfter.addAll(getAttachedComponentsRecursive(level, pos.relative(direction), direction, nextComponent));
         }
 
         return attachedAfter;
     }
 
-    protected static ArrayList<JetComponentBlock> getAttachedComponentsBothSides(Level level, BlockPos pos, Direction direction) {
-        Block front = level.getBlockState(pos.relative(direction)).getBlock();
-        Block back = level.getBlockState(pos.relative(direction.getOpposite())).getBlock();
-        ArrayList<JetComponentBlock> attachedBack, attachedFront, attachedBoth = new ArrayList<>();
+    protected static ArrayList<BlockState> getAttachedComponentsBothSides(Level level, BlockPos pos, Direction direction) {
+        BlockState front = level.getBlockState(pos.relative(direction));
+        BlockState back = level.getBlockState(pos.relative(direction.getOpposite()));
+        ArrayList<BlockState> attachedBack, attachedFront, attachedBoth = new ArrayList<>();
 
-        if (back instanceof JetComponentBlock block) {
-            attachedBack = getAttachedComponentsRecursive(level, pos.relative(direction.getOpposite()), direction.getOpposite(), block);
+        if (back.getBlock() instanceof JetComponentBlock block) {
+            attachedBack = getAttachedComponentsRecursive(level, pos.relative(direction.getOpposite()), direction.getOpposite(), back);
         } else attachedBack = null;
         attachedBoth.addAll(attachedBack);
 
-        if (front instanceof JetComponentBlock block) {
-            attachedFront = getAttachedComponentsRecursive(level, pos.relative(direction), direction, block);
+        if (front.getBlock() instanceof JetComponentBlock block) {
+            attachedFront = getAttachedComponentsRecursive(level, pos.relative(direction), direction, front);
         } else attachedFront = null;
         attachedBoth.addAll(attachedFront);
         return (attachedBoth);
