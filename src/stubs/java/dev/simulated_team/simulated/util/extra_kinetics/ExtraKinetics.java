@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.util.extra_kinetics;
+package dev.simulated_team.simulated.util.extra_kinetics;
 
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;

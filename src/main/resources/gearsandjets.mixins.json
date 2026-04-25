@@ -2,15 +2,7 @@
   "required": true,
   "package": "dev.aviatorsofcreate.gearsandjets.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "extra_kinetics.GeneratingKineticBlockEntityMixin",
-    "extra_kinetics.KineticBlockEntityMixin",
-    "extra_kinetics.KineticBlockMixin",
-    "extra_kinetics.KineticNetworkMixin",
-    "extra_kinetics.RotationPropagatorMixin",
-    "extra_kinetics.auto_orientation.FixAutoOrientationMixin",
-    "extra_kinetics.auto_orientation.FixAutoOrientationStaticMixin"
-  ],
+  "mixins": [],
   "injectors": {
     "defaultRequire": 1
   },

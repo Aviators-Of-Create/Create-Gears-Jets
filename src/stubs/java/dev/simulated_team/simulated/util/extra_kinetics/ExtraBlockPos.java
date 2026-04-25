@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.util.extra_kinetics;
+package dev.simulated_team.simulated.util.extra_kinetics;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;

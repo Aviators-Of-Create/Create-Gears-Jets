@@ -26,6 +26,18 @@ sourceSets.main.resources {
     exclude("src/generated/**/.cache") // datagen cache files
 }
 
+sourceSets {
+    stubs {
+        java.srcDir('src/stubs/java')
+        compileClasspath += sourceSets.main.compileClasspath
+    }
+}
+
+tasks.named('compileJava', JavaCompile).configure {
+    dependsOn tasks.named('compileStubsJava')
+    classpath += sourceSets.stubs.output
+}
+
 repositories {
     mavenCentral()
 
@@ -145,9 +157,6 @@ configurations {
 }
 
 dependencies {
-    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.4.1'
-    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
-
     compileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}") {
         transitive = false
     }

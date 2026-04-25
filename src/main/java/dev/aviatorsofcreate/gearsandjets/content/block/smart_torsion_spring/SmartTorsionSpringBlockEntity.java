@@ -16,9 +16,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollVa
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import dev.aviatorsofcreate.gearsandjets.mixin_interface.extra_kinetics.KineticBlockEntityExtension;
-import dev.aviatorsofcreate.gearsandjets.util.extra_kinetics.ExtraBlockPos;
-import dev.aviatorsofcreate.gearsandjets.util.extra_kinetics.ExtraKinetics;
+import dev.simulated_team.simulated.mixin_interface.extra_kinetics.KineticBlockEntityExtension;
+import dev.simulated_team.simulated.util.extra_kinetics.ExtraBlockPos;
+import dev.simulated_team.simulated.util.extra_kinetics.ExtraKinetics;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
