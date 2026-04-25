@@ -117,4 +117,18 @@ public abstract class JetComponentBlock extends Block implements EntityBlock, IW
         attachedBoth.addAll(attachedFront);
         return (attachedBoth);
     }
+
+    private static void collectAttachedBlock(Level level, Block attachedBlock, @Nullable Player player, ItemStack tool, ServerLevel serverLevel) {
+        if (!(attachedBlock instanceof IntakeBlock) && !(attachedBlock instanceof ExhaustBlock)) {
+            return;
+        }
+
+        if (player != null && !player.isCreative()) {
+            Block.getDrops(attachedState, serverLevel, attachedPos, level.getBlockEntity(attachedPos), player, tool)
+                    .forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
+        }
+
+        attachedState.spawnAfterBreak(serverLevel, attachedPos, ItemStack.EMPTY, true);
+        level.destroyBlock(attachedPos, false);
+    }
 }
