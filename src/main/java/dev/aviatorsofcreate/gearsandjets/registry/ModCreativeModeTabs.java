@@ -19,7 +19,6 @@ public final class ModCreativeModeTabs {
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.gearsandjets"))
                     .withTabsBefore(CreativeModeTabs.COMBAT)
-                    .icon(() -> ModItems.EXAMPLE_ITEM.get().getDefaultInstance())
                     .displayItems((parameters, output) ->
                             ModItems.ITEMS.getEntries().forEach(item -> output.accept(item.get())))
                     .build()

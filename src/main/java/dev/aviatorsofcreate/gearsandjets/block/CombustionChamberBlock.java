@@ -42,7 +42,9 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
         this.sableBlockWeight = sableBlockWeight;
         registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
-                .setValue(POWERED, false));
+                .setValue(POWERED, false)
+                .setValue(MACHINE_STATE, MachineState.OFF)
+        );
     }
 
     public abstract int getTankCapacity();
@@ -135,7 +137,7 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, POWERED);
+        builder.add(FACING, POWERED, MACHINE_STATE);
     }
 
     private static boolean hasAttachedIntakeOrExhaust(Level level, BlockPos pos, Direction facing) {

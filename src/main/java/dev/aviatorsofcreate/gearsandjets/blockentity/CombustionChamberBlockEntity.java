@@ -19,11 +19,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
+import static dev.aviatorsofcreate.gearsandjets.block.CombustionChamberBlock.MACHINE_STATE;
+import static dev.aviatorsofcreate.gearsandjets.enums.MachineState.*;
+
 public class CombustionChamberBlockEntity extends SmartBlockEntity implements BlockEntitySubLevelPropellerActor, BlockEntityPropeller {
 
-    private float fuelTicks = 0;
     private SmartFluidTankBehaviour tank;
     private int signal = 0;
+    private int signalLast = 0;
     private double thrust = 0;
     private boolean active = false;
 
@@ -43,22 +46,37 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
         this.signal = signal;
     }
 
-    @Override
-    public double getThrust() {
-        return this.thrust;
-    }
-
     public boolean isPowered() {
         return signal > 0;
     }
 
     private boolean updateFuel(SmartFluidTankBehaviour tankBehaviour, int redstone) {
-        int fluidRemoved = 100 * redstone / 15;
+        int fluidRemoved = 10 * redstone / 15;
         if (tankBehaviour.getPrimaryHandler().getFluidAmount() < fluidRemoved) {
             return false;
         }
         tankBehaviour.getPrimaryHandler().drain(fluidRemoved, IFluidHandler.FluidAction.EXECUTE);
         return true;
+    }
+
+    private void updateThrust() {
+        double thrust = 0;
+        switch (this.getBlockState().getValue(MACHINE_STATE)) {
+            case OFF:
+                this.active = false;
+                break;
+            case IDLING:
+                this.active = true;
+                thrust = this.signal / ( 15 * 3.156925 );
+                break;
+            case RUNNING:
+                this.active = true;
+                thrust = Math.pow((double) this.signal / 15, 3.5);
+                break;
+            default:
+                throw new IllegalStateException("Jet engine has invalid blockstate!");
+        }
+        this.thrust = thrust;
     }
 
     private void emitExhaustParticles(ServerLevel level) {
@@ -115,6 +133,11 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
     }
 
     @Override
+    public double getThrust() {
+        return this.thrust;
+    }
+
+    @Override
     public boolean isActive() {
         return this.active;
     }
@@ -134,9 +157,20 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
 
             BlockState state = this.getBlockState();
             boolean powered = this.signal > 0;
+            boolean running = this.signal > 3;
+
+            if (!powered) {
+                level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, OFF));
+            } else if (!running) {
+                level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, IDLING));
+            } else {
+                level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, RUNNING));
+            }
+
             if (state.hasProperty(CombustionChamberBlock.POWERED) && state.getValue(CombustionChamberBlock.POWERED) != powered) {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(CombustionChamberBlock.POWERED, powered));
             }
+            updateThrust();
         }
 
         super.tick();

@@ -1,10 +1,11 @@
 package dev.aviatorsofcreate.gearsandjets.enums;
 
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
 public enum MachineState implements StringRepresentable {
     OFF("off"),
-    STARTING("starting"),
+    IDLING("idling"),
     RUNNING("running");
 
     private final String name;
@@ -14,7 +15,7 @@ public enum MachineState implements StringRepresentable {
     }
 
     @Override
-    public String getSerializedName() {
+    public @NotNull String getSerializedName() {
         return this.name;
     }
 }
