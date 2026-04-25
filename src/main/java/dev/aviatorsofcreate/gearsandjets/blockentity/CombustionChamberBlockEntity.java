@@ -8,20 +8,10 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import dev.aviatorsofcreate.gearsandjets.block.CombustionChamberBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class CombustionChamberBlockEntity extends SmartBlockEntity {
 
@@ -63,12 +53,18 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
 
     @Override
     public void tick() {
-        if (!this.getLevel().isClientSide && this.signal > 0 ) {
-            updateFuel(this.tank, this.signal);
+        Level level = this.getLevel();
+        if (level != null && !level.isClientSide) {
+            this.signal = level.getBestNeighborSignal(this.getBlockPos());
+
+            if (this.signal > 0) {
+                updateFuel(this.tank, this.signal);
+            }
+
             BlockState state = this.getBlockState();
             boolean powered = this.signal > 0;
             if (state.hasProperty(CombustionChamberBlock.POWERED) && state.getValue(CombustionChamberBlock.POWERED) != powered) {
-                this.getLevel().setBlockAndUpdate(this.getBlockPos(), state.setValue(CombustionChamberBlock.POWERED, powered));
+                level.setBlockAndUpdate(this.getBlockPos(), state.setValue(CombustionChamberBlock.POWERED, powered));
             }
         }
 
