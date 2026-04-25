@@ -1,3 +1,14 @@
+Block models, item models, textures, and other visual or artistic assets
+included in this project are not licensed under the MIT License unless
+explicitly stated otherwise. All such assets are Copyright (c) 2022 The
+"Create: Gears and Jets"-Team and are provided under All Rights Reserved.
+
+These assets may be redistributed in modpacks only when included as part of
+the original, unmodified "Create: Gears and Jets" project. This permission does
+not allow the assets to be extracted, reused, modified, repackaged, or included
+in forks, ports, remakes, derivative mods, resource packs, or other projects
+without prior written permission from the copyright holders.
+
 MIT License
 
 Copyright (c) 2022 The "Create: Gears and Jets"-Team
@@ -11,17 +22,6 @@ the Software is furnished to do so, subject to the following conditions:
 
 This license applies only to the software source code and associated
 documentation files, unless otherwise explicitly stated.
-
-Block models, item models, textures, and other visual or artistic assets
-included in this project are not licensed under the MIT License unless
-explicitly stated otherwise. All such assets are Copyright (c) 2022 The
-"Create: Gears and Jets"-Team and are provided under All Rights Reserved.
-
-These assets may be redistributed in modpacks only when included as part of
-the original, unmodified "Create: Gears and Jets" project. This permission does
-not allow the assets to be extracted, reused, modified, repackaged, or included
-in forks, ports, remakes, derivative mods, resource packs, or other projects
-without prior written permission from the copyright holders.
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.

@@ -2,6 +2,7 @@ package dev.aviatorsofcreate.gearsandjets.registry;
 
 import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
 import dev.aviatorsofcreate.gearsandjets.content.block.*;
+import dev.aviatorsofcreate.gearsandjets.content.block.smart_torsion_spring.SmartTorsionSpringBlockEntity;
 import dev.aviatorsofcreate.gearsandjets.content.blockentity.BasicCombustionChamberBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,6 +26,14 @@ public final class ModBlockEntityTypes {
                     () -> BlockEntityType.Builder.of(
                             (pos, state) -> new BasicCombustionChamberBlockEntity(getCombustionChamberType(), pos, state),
                             ModBlocks.SIMPLE_COMBUSTION_CHAMBER.get()
+                    ).build(null)
+            );
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SmartTorsionSpringBlockEntity>> SMART_TORSION_SPRING =
+            BLOCK_ENTITY_TYPES.register(
+                    "smart_torsion_spring",
+                    () -> BlockEntityType.Builder.of(
+                            (pos, state) -> new SmartTorsionSpringBlockEntity(getSmartTorsionSpringType(), pos, state),
+                            ModBlocks.SMART_TORSION_SPRING.get()
                     ).build(null)
             );
 
@@ -55,6 +64,10 @@ public final class ModBlockEntityTypes {
 
     private static BlockEntityType<BasicCombustionChamberBlockEntity> getCombustionChamberType() {
         return COMBUSTION_CHAMBER.get();
+    }
+
+    private static BlockEntityType<SmartTorsionSpringBlockEntity> getSmartTorsionSpringType() {
+        return SMART_TORSION_SPRING.get();
     }
 
     private static BasicCombustionChamberBlockEntity getAttachedCombustionChamber(Level level, BlockPos pos, BlockState state) {

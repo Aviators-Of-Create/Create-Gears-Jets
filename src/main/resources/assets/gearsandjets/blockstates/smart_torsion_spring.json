@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "gearsandjets:block/smart_torsion_spring/block",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "gearsandjets:block/smart_torsion_spring/block",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "gearsandjets:block/smart_torsion_spring/block",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "gearsandjets:block/smart_torsion_spring/block",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "gearsandjets:block/smart_torsion_spring/block"
+    },
+    "facing=west": {
+      "model": "gearsandjets:block/smart_torsion_spring/block",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

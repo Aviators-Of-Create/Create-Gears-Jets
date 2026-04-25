@@ -2,7 +2,10 @@ package dev.aviatorsofcreate.gearsandjets;
 
 import dev.aviatorsofcreate.gearsandjets.client.EngineIntakeParticleSpawner;
 import dev.aviatorsofcreate.gearsandjets.client.EngineParticleBridge;
+import dev.aviatorsofcreate.gearsandjets.content.block.smart_torsion_spring.SmartTorsionSpringRenderer;
+import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -27,6 +30,10 @@ public class CreateGearsandJetsClient {
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         EngineParticleBridge.setIntakeParticleSpawner(EngineIntakeParticleSpawner::spawn);
+        event.enqueueWork(() -> BlockEntityRenderers.register(
+                ModBlockEntityTypes.SMART_TORSION_SPRING.get(),
+                SmartTorsionSpringRenderer::new
+        ));
         // Some client setup code
         CreateGearsandJets.LOGGER.info("HELLO FROM CLIENT SETUP");
         CreateGearsandJets.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());

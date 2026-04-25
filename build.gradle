@@ -145,6 +145,9 @@ configurations {
 }
 
 dependencies {
+    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.4.1'
+    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+
     compileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}") {
         transitive = false
     }

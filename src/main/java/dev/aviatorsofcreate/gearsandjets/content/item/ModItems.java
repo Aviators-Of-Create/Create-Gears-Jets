@@ -18,6 +18,8 @@ public final class ModItems {
             registerBlockItem("simple_exhaust", ModBlocks.SIMPLE_EXHAUST);
     public static final DeferredItem<BlockItem> AIRPLANE_SEAT =
             registerBlockItem("airplane_seat", ModBlocks.AIRPLANE_SEAT);
+    public static final DeferredItem<BlockItem> SMART_TORSION_SPRING =
+            registerBlockItem("smart_torsion_spring", ModBlocks.SMART_TORSION_SPRING);
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

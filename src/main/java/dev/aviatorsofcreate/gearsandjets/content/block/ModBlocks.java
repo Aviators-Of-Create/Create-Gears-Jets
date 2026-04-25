@@ -1,6 +1,7 @@
 package dev.aviatorsofcreate.gearsandjets.content.block;
 
 import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
+import dev.aviatorsofcreate.gearsandjets.content.block.smart_torsion_spring.SmartTorsionSpringBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
@@ -31,6 +32,14 @@ public final class ModBlocks {
                     .mapColor(MapColor.COLOR_GRAY)
                     .strength(0.8F)
                     .sound(SoundType.WOOL)
+                    .noOcclusion())
+    );
+    public static final DeferredBlock<SmartTorsionSpringBlock> SMART_TORSION_SPRING = BLOCKS.register(
+            "smart_torsion_spring",
+            () -> new SmartTorsionSpringBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.STONE)
+                    .strength(2.0F)
+                    .sound(SoundType.METAL)
                     .noOcclusion())
     );
 
