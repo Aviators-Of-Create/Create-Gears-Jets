@@ -51,38 +51,32 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
     }
 
     public boolean isPowered() {
-        return signal > 0;
+        return this.signal > 0;
     }
 
-    private int consumeFuel(SmartFluidTankBehaviour tankBehaviour, int redstone) {
-        int fluidConsumed = getMaxBurnRate() * redstone / 15;
-        if (fluidConsumed <= 0 || tankBehaviour.getPrimaryHandler().getFluidAmount() < fluidConsumed) {
+    private int updateFuel(SmartFluidTankBehaviour tankBehaviour, int redstone) {
+        FluidTank tank = tankBehaviour.getPrimaryHandler();
+        int fluidConsumed = Math.min(getMaxBurnRate() * redstone / 15, tank.getFluidAmount());
+        if (fluidConsumed == 0) {
             return 0;
         }
-        tankBehaviour.getPrimaryHandler().drain(fluidConsumed, IFluidHandler.FluidAction.EXECUTE);
+        tank.drain(fluidConsumed, IFluidHandler.FluidAction.EXECUTE);
         return fluidConsumed;
     }
 
-    private void updateThrust() {
-        this.thrust = calculateThrust(this.signal);
-        this.active = this.thrust > 0;
-    }
 
-    private double calculateThrust(int redstoneSignal) {
-        if (redstoneSignal <= 0 || !validFS()) {
-            return 0;
-        }
+    private void updateThrust(int redstoneSignal) {
 
         float multiplier = getThrustMultiplier();
-        return switch (this.getBlockState().getValue(MACHINE_STATE)) {
+        this.thrust = switch (this.getBlockState().getValue(MACHINE_STATE)) {
             case OFF -> 0;
             case IDLING -> multiplier * redstoneSignal / (15 * 3.156925);
             case RUNNING -> multiplier * Math.pow((double) redstoneSignal / 15, 3.5);
         };
     }
 
-    private double calculateAirflow(int redstoneSignal) {
-        return calculateThrust(redstoneSignal) / 3;
+    private double calculateAirflow() {
+        return this.thrust / 3;
     }
 
     private AttachedJetPartData getAttachedIntake(Level level) {
@@ -127,7 +121,7 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
             return;
         }
 
-        double airflow = Math.abs(calculateAirflow(this.signal));
+        double airflow = Math.abs(calculateAirflow());
         if (airflow <= 0) {
             return;
         }
@@ -152,10 +146,9 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
         double baseX = exhaustPos.getX() + 0.5D + dirX * 0.45D;
         double baseY = exhaustPos.getY() + 0.55D;
         double baseZ = exhaustPos.getZ() + 0.5D + dirZ * 0.45D;
-        int segments = Math.max(1, Math.min(4, fuelConsumed));
-        int largeSmokeCount = Math.max(1, Math.min(4, fuelConsumed / 2));
-        int smokeCount = Math.max(1, Math.min(3, fuelConsumed / 3));
-        int signalSmokeCount = Math.max(1, Math.min(2, fuelConsumed / 5));
+        int segments = Math.clamp(fuelConsumed, 1, 4);
+        int largeSmokeCount = Math.clamp(fuelConsumed / 2, 1, 4);
+        int signalSmokeCount = Math.clamp(fuelConsumed / 5, 1, 2);
         double spreadScale = 0.05D + Math.min(fuelConsumed, 10) * 0.01D;
         double speedScale = 0.006D + Math.min(fuelConsumed, 10) * 0.0008D;
 
@@ -208,23 +201,22 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
             this.signal = level.getBestNeighborSignal(this.getBlockPos());
         }
 
+        updateThrust(this.signal);
+
         if (level != null && level.isClientSide) {
             emitIntakeParticles(level);
-            updateThrust();
         } else if (level != null) {
-            int fuelConsumed = consumeFuel(this.tank, this.signal);
+            int fuelConsumed = updateFuel(this.tank, this.signal);
             boolean burnedFuel = fuelConsumed > 0;
             if (burnedFuel && level instanceof ServerLevel serverLevel) {
                 emitExhaustParticles(serverLevel, fuelConsumed);
             }
 
-
             BlockState state = this.getBlockState();
             boolean powered = this.signal > 0;
             boolean running = this.signal > 3;
 
-
-            if (!powered && !burnedFuel) {
+            if (!powered) {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, OFF));
             } else if (!running) {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, IDLING));
@@ -235,7 +227,6 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
             if (state.hasProperty(BasicCombustionChamberBlock.POWERED) && state.getValue(BasicCombustionChamberBlock.POWERED) != powered) {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(BasicCombustionChamberBlock.POWERED, powered));
             }
-            updateThrust();
         }
 
         super.tick();
@@ -252,7 +243,7 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
     }
 
     @Override
-    public FluidTank getTank() {
+    public SmartFluidTank getTank() {
         return tank.getPrimaryHandler();
     }
 
