@@ -1,5 +1,7 @@
 package dev.aviatorsofcreate.gearsandjets;
 
+import dev.aviatorsofcreate.gearsandjets.client.EngineIntakeParticleSpawner;
+import dev.aviatorsofcreate.gearsandjets.client.EngineParticleBridge;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,6 +26,7 @@ public class CreateGearsandJetsClient {
 
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
+        EngineParticleBridge.setIntakeParticleSpawner(EngineIntakeParticleSpawner::spawn);
         // Some client setup code
         CreateGearsandJets.LOGGER.info("HELLO FROM CLIENT SETUP");
         CreateGearsandJets.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
