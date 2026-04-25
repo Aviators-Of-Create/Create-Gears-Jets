@@ -27,6 +27,7 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
 
     float fuelTicks = 0;
     private SmartFluidTankBehaviour tank;
+    int signal = 0;
 
     public CombustionChamberBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -34,6 +35,18 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
 
     public SmartFluidTank getFluidHandler() {
         return this.tank.getPrimaryHandler();
+    }
+
+    public int getSignal() {
+        return this.signal;
+    }
+
+    public void setSignal(int signal) {
+        this.signal = signal;
+    }
+
+    public boolean isPowered() {
+        return signal > 0;
     }
 
     private void updateFuel(SmartFluidTankBehaviour tankBehaviour, int redstone) {
@@ -49,11 +62,9 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
 
     @Override
     public void tick() {
-        int signal = this.getLevel().getBestNeighborSignal(this.getBlockPos());
-
-        if (!this.getLevel().isClientSide) {
-            updateFuel(this.tank, signal);
-            this.getLevel().setBlockAndUpdate(this.getBlockPos(), this.getBlockState().setValue(CombustionChamberBlock.POWERED, signal > 0));
+        if (!this.getLevel().isClientSide && this.signal > 0 ) {
+            updateFuel(this.tank, this.signal);
+            this.getLevel().setBlockAndUpdate(this.getBlockPos(), this.getBlockState().setValue(CombustionChamberBlock.POWERED, this.signal > 0));
         }
 
         super.tick();
