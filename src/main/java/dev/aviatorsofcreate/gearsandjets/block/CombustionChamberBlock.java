@@ -71,7 +71,16 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        return defaultBlockState().setValue(FACING, context.getPlayer().isShiftKeyDown() ? context.getHorizontalDirection() : context.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+        if (hasAttachedIntakeOrExhaust(context.getLevel(), context.getClickedPos(), state.getValue(FACING))) {
+            return InteractionResult.FAIL;
+        }
+
+        return IWrenchable.super.onWrenched(state, context);
     }
 
     @Override
@@ -127,6 +136,16 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWERED);
+    }
+
+    private static boolean hasAttachedIntakeOrExhaust(Level level, BlockPos pos, Direction facing) {
+        return isIntakeOrExhaust(level.getBlockState(pos.relative(facing)))
+                || isIntakeOrExhaust(level.getBlockState(pos.relative(facing.getOpposite())));
+    }
+
+    private static boolean isIntakeOrExhaust(BlockState state) {
+        Block block = state.getBlock();
+        return block instanceof IntakeBlock || block instanceof ExhaustBlock;
     }
 
     private static void collectAttachedBlock(Level level, BlockPos attachedPos, @Nullable Player player, ItemStack tool, ServerLevel serverLevel) {
