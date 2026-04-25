@@ -70,12 +70,19 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
         Direction exhaustFacing = exhaustState.getValue(ExhaustBlock.FACING);
         double dirX = exhaustFacing.getStepX();
         double dirZ = exhaustFacing.getStepZ();
-        double x = exhaustPos.getX() + 0.5D + dirX * 0.45D;
-        double y = exhaustPos.getY() + 0.55D;
-        double z = exhaustPos.getZ() + 0.5D + dirZ * 0.45D;
+        double baseX = exhaustPos.getX() + 0.5D + dirX * 0.45D;
+        double baseY = exhaustPos.getY() + 0.55D;
+        double baseZ = exhaustPos.getZ() + 0.5D + dirZ * 0.45D;
 
-        level.sendParticles(ParticleTypes.CLOUD, x, y, z, 2, 0.04D, 0.03D, 0.04D, 0.01D);
-        level.sendParticles(ParticleTypes.SMOKE, x, y, z, 1, 0.02D, 0.02D, 0.02D, 0.01D);
+        for (int i = 0; i < 4; i++) {
+            double distance = i * 0.28D;
+            double x = baseX + dirX * distance;
+            double y = baseY + i * 0.01D;
+            double z = baseZ + dirZ * distance;
+            level.sendParticles(ParticleTypes.CLOUD, x, y, z, 4, 0.07D, 0.05D, 0.07D, 0.003D);
+        }
+
+        level.sendParticles(ParticleTypes.SMOKE, baseX, baseY, baseZ, 1, 0.015D, 0.015D, 0.015D, 0.005D);
     }
 
     @Override
@@ -92,7 +99,7 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
 
             if (this.signal > 0) {
                 boolean burnedFuel = updateFuel(this.tank, this.signal);
-                if (burnedFuel && level instanceof ServerLevel serverLevel && level.getGameTime() % 2L == 0L) {
+                if (burnedFuel && level instanceof ServerLevel serverLevel) {
                     emitExhaustParticles(serverLevel);
                 }
             }
