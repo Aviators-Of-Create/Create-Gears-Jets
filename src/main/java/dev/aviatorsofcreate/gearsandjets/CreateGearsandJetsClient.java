@@ -3,7 +3,7 @@ package dev.aviatorsofcreate.gearsandjets;
 import dev.aviatorsofcreate.gearsandjets.client.EngineIntakeParticleSpawner;
 import dev.aviatorsofcreate.gearsandjets.client.EngineParticleBridge;
 import dev.aviatorsofcreate.gearsandjets.client.ModPartialModels;
-import dev.aviatorsofcreate.gearsandjets.content.block.smart_torsion_spring.SmartTorsionSpringRenderer;
+import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_spring.SmartTorsionSpringRenderer;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;

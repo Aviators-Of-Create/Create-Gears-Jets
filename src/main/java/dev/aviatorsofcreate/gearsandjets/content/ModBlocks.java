@@ -1,7 +1,11 @@
-package dev.aviatorsofcreate.gearsandjets.content.block;
+package dev.aviatorsofcreate.gearsandjets.content;
 
 import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
-import dev.aviatorsofcreate.gearsandjets.content.block.smart_torsion_spring.SmartTorsionSpringBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.simple.SimpleCombustionChamberBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.simple.SimpleExhaustBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.simple.SimpleIntakeBlock;
+import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_spring.SmartTorsionSpringBlock;
+import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;

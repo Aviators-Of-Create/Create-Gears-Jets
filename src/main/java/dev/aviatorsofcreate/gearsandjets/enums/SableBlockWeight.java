@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.content.block;
+package dev.aviatorsofcreate.gearsandjets.enums;
 
 public enum SableBlockWeight {
     SUPER_LIGHT,

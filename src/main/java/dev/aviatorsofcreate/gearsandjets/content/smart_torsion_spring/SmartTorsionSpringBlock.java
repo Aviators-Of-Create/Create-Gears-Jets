@@ -1,10 +1,10 @@
-package dev.aviatorsofcreate.gearsandjets.content.block.smart_torsion_spring;
+package dev.aviatorsofcreate.gearsandjets.content.smart_torsion_spring;
 
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.foundation.block.IBE;
 import dev.simulated_team.simulated.util.extra_kinetics.ExtraKinetics;
-import dev.aviatorsofcreate.gearsandjets.content.block.BlockShapeHelper;
+import dev.aviatorsofcreate.gearsandjets.content.BlockShapeHelper;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

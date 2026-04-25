@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.content.blockentity;
+package dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion;
 
 import java.util.List;
 
@@ -6,9 +6,8 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
-import dev.aviatorsofcreate.gearsandjets.content.block.BasicCombustionChamberBlock;
-import dev.aviatorsofcreate.gearsandjets.content.block.ExhaustBlock;
-import dev.aviatorsofcreate.gearsandjets.content.block.IntakeBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.exhaust.ExhaustBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.intake.IntakeBlock;
 import dev.aviatorsofcreate.gearsandjets.content.interfaces.IEngine;
 import dev.aviatorsofcreate.gearsandjets.client.EngineParticleBridge;
 import dev.ryanhcode.sable.api.block.propeller.BlockEntityPropeller;
@@ -23,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
-import static dev.aviatorsofcreate.gearsandjets.content.block.BasicCombustionChamberBlock.MACHINE_STATE;
+import static dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlock.MACHINE_STATE;
 import static dev.aviatorsofcreate.gearsandjets.enums.MachineState.*;
 
 public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implements BlockEntitySubLevelPropellerActor, BlockEntityPropeller, IEngine {

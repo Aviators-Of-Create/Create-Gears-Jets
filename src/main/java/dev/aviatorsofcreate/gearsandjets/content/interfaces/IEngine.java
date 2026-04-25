@@ -7,7 +7,7 @@ import dev.aviatorsofcreate.gearsandjets.fuel_type.FuelType;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
-import static dev.aviatorsofcreate.gearsandjets.content.block.BasicCombustionChamberBlock.MACHINE_STATE;
+import static dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlock.MACHINE_STATE;
 
 public interface IEngine {
 

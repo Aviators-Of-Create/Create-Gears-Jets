@@ -1,7 +1,9 @@
-package dev.aviatorsofcreate.gearsandjets.content.block;
+package dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion;
 
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
-import dev.aviatorsofcreate.gearsandjets.content.blockentity.BasicCombustionChamberBlockEntity;
+import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.exhaust.ExhaustBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.intake.IntakeBlock;
 import dev.aviatorsofcreate.gearsandjets.enums.MachineState;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;

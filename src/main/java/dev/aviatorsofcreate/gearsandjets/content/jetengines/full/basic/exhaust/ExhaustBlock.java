@@ -1,5 +1,7 @@
-package dev.aviatorsofcreate.gearsandjets.content.block;
+package dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.exhaust;
 
+import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlock;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -17,11 +19,11 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 
-public abstract class IntakeBlock extends Block {
+public abstract class ExhaustBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private final SableBlockWeight sableBlockWeight;
 
-    protected IntakeBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
+    protected ExhaustBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties);
         this.sableBlockWeight = sableBlockWeight;
         registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
@@ -84,11 +86,11 @@ public abstract class IntakeBlock extends Block {
         return null;
     }
 
-    private static boolean isValidCombustionChamber(LevelReader level, BlockPos intakePos, Direction facing) {
-        BlockPos chamberPos = intakePos.relative(facing.getOpposite());
+    private static boolean isValidCombustionChamber(LevelReader level, BlockPos exhaustPos, Direction facing) {
+        BlockPos chamberPos = exhaustPos.relative(facing.getOpposite());
         BlockState chamberState = level.getBlockState(chamberPos);
         return chamberState.getBlock() instanceof BasicCombustionChamberBlock
                 && chamberState.hasProperty(BasicCombustionChamberBlock.FACING)
-                && chamberState.getValue(BasicCombustionChamberBlock.FACING) == facing;
+                && chamberState.getValue(BasicCombustionChamberBlock.FACING) == facing.getOpposite();
     }
 }

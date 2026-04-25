@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.content.block.smart_torsion_spring;
+package dev.aviatorsofcreate.gearsandjets.content.smart_torsion_spring;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;

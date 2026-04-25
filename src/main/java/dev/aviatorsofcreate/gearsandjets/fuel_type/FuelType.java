@@ -2,7 +2,7 @@ package dev.aviatorsofcreate.gearsandjets.fuel_type;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.aviatorsofcreate.gearsandjets.content.blockentity.BasicCombustionChamberBlockEntity;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlockEntity;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
@@ -37,8 +37,9 @@ public record FuelType(HolderSet<Fluid> fluid, PerEngineProperties basic, float 
     }
 
     public PerEngineProperties getGeneratedData(BlockEntity blockEntity) {
-        //if (blockEntity instanceof BasicCombustionChamberBlockEntity) return basic; // Going to be implemented once we add more engine types
-        return basic;
+        if (blockEntity instanceof BasicCombustionChamberBlockEntity) return basic;
+        //if (blockEntity instanceof ImprovedCombustionChamberBlockEntity) return improved; // Improved engines not added yet
+        return null;
     }
 
     public record PerEngineProperties(float thrust, int burn, int startupCost) {

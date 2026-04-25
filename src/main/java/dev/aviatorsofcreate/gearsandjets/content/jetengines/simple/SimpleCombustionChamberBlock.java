@@ -1,8 +1,11 @@
-package dev.aviatorsofcreate.gearsandjets.content.block;
+package dev.aviatorsofcreate.gearsandjets.content.jetengines.simple;
 
 import dev.aviatorsofcreate.gearsandjets.Config;
 import java.util.Map;
 
+import dev.aviatorsofcreate.gearsandjets.content.BlockShapeHelper;
+import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
