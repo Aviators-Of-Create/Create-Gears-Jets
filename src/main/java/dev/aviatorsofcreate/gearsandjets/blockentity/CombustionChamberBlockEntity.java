@@ -7,7 +7,11 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import dev.aviatorsofcreate.gearsandjets.block.CombustionChamberBlock;
+import dev.aviatorsofcreate.gearsandjets.block.ExhaustBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -39,10 +43,39 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
         return signal > 0;
     }
 
-    private void updateFuel(SmartFluidTankBehaviour tankBehaviour, int redstone) {
+    private boolean updateFuel(SmartFluidTankBehaviour tankBehaviour, int redstone) {
         int fluidRemoved = 100 * redstone / 15;
-        if (tankBehaviour.getPrimaryHandler().getFluidAmount() < fluidRemoved) return;
+        if (tankBehaviour.getPrimaryHandler().getFluidAmount() < fluidRemoved) {
+            return false;
+        }
         tankBehaviour.getPrimaryHandler().drain(fluidRemoved, IFluidHandler.FluidAction.EXECUTE);
+        return true;
+    }
+
+    private void emitExhaustParticles(ServerLevel level) {
+        BlockState chamberState = this.getBlockState();
+        if (!chamberState.hasProperty(CombustionChamberBlock.FACING)) {
+            return;
+        }
+
+        Direction chamberFacing = chamberState.getValue(CombustionChamberBlock.FACING);
+        BlockPos exhaustPos = this.getBlockPos().relative(chamberFacing.getOpposite());
+        BlockState exhaustState = level.getBlockState(exhaustPos);
+        if (!(exhaustState.getBlock() instanceof ExhaustBlock)
+                || !exhaustState.hasProperty(ExhaustBlock.FACING)
+                || exhaustState.getValue(ExhaustBlock.FACING) != chamberFacing.getOpposite()) {
+            return;
+        }
+
+        Direction exhaustFacing = exhaustState.getValue(ExhaustBlock.FACING);
+        double dirX = exhaustFacing.getStepX();
+        double dirZ = exhaustFacing.getStepZ();
+        double x = exhaustPos.getX() + 0.5D + dirX * 0.45D;
+        double y = exhaustPos.getY() + 0.55D;
+        double z = exhaustPos.getZ() + 0.5D + dirZ * 0.45D;
+
+        level.sendParticles(ParticleTypes.CLOUD, x, y, z, 2, 0.04D, 0.03D, 0.04D, 0.01D);
+        level.sendParticles(ParticleTypes.SMOKE, x, y, z, 1, 0.02D, 0.02D, 0.02D, 0.01D);
     }
 
     @Override
@@ -58,7 +91,10 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
             this.signal = level.getBestNeighborSignal(this.getBlockPos());
 
             if (this.signal > 0) {
-                updateFuel(this.tank, this.signal);
+                boolean burnedFuel = updateFuel(this.tank, this.signal);
+                if (burnedFuel && level instanceof ServerLevel serverLevel && level.getGameTime() % 2L == 0L) {
+                    emitExhaustParticles(serverLevel);
+                }
             }
 
             BlockState state = this.getBlockState();
