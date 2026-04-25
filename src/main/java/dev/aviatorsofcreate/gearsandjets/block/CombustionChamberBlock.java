@@ -2,6 +2,7 @@ package dev.aviatorsofcreate.gearsandjets.block;
 
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import dev.aviatorsofcreate.gearsandjets.blockentity.CombustionChamberBlockEntity;
+import dev.aviatorsofcreate.gearsandjets.enums.MachineState;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -31,6 +33,9 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final Property<Boolean> POWERED = BlockStateProperties.POWERED;
     private final SableBlockWeight sableBlockWeight;
+
+    public static final EnumProperty<MachineState> MACHINE_STATE =
+            EnumProperty.create("machine_state", MachineState.class);
 
     protected CombustionChamberBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties);
