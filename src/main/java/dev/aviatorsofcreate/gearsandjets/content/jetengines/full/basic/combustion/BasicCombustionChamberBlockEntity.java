@@ -2,6 +2,7 @@ package dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combusti
 
 import java.util.List;
 
+import com.simibubi.create.content.fluids.FluidTransportBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
@@ -28,6 +29,7 @@ import static dev.aviatorsofcreate.gearsandjets.enums.MachineState.*;
 public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implements BlockEntitySubLevelPropellerActor, BlockEntityPropeller, IEngine {
 
     private SmartFluidTankBehaviour tank;
+    private FluidTransportBehaviour pump;
     private int signal = 0;
     private double thrust = 0;
     private boolean active = false;

@@ -1,6 +1,8 @@
 package dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion;
 
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.JetComponentBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.generic.CombustionChamberBlock;
 import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.exhaust.ExhaustBlock;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.intake.IntakeBlock;
@@ -31,7 +33,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class BasicCombustionChamberBlock extends Block implements EntityBlock, IWrenchable {
+public class BasicCombustionChamberBlock extends CombustionChamberBlock implements EntityBlock, IWrenchable {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final Property<Boolean> POWERED = BlockStateProperties.POWERED;
     private final SableBlockWeight sableBlockWeight;
@@ -40,7 +42,7 @@ public abstract class BasicCombustionChamberBlock extends Block implements Entit
             EnumProperty.create("machine_state", MachineState.class);
 
     protected BasicCombustionChamberBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
-        super(properties);
+        super(properties, sableBlockWeight);
         this.sableBlockWeight = sableBlockWeight;
         registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
@@ -49,7 +51,6 @@ public abstract class BasicCombustionChamberBlock extends Block implements Entit
         );
     }
 
-    public abstract int getTankCapacity();
 
     public SableBlockWeight getSableBlockWeight() {
         return sableBlockWeight;
@@ -76,15 +77,6 @@ public abstract class BasicCombustionChamberBlock extends Block implements Entit
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return defaultBlockState().setValue(FACING, context.getPlayer().isShiftKeyDown() ? context.getHorizontalDirection() : context.getHorizontalDirection().getOpposite());
-    }
-
-    @Override
-    public InteractionResult onWrenched(BlockState state, UseOnContext context) {
-        if (hasAttachedIntakeOrExhaust(context.getLevel(), context.getClickedPos(), state.getValue(FACING))) {
-            return InteractionResult.FAIL;
-        }
-
-        return IWrenchable.super.onWrenched(state, context);
     }
 
     @Override

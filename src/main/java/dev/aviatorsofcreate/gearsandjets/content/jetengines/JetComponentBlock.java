@@ -29,10 +29,6 @@ public abstract class JetComponentBlock extends Block implements EntityBlock, IW
     protected JetComponentBlock(Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties);
         this.sableBlockWeight = sableBlockWeight;
-        registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH)
-                .setValue(MACHINE_STATE, MachineState.OFF)
-        );
     }
 
     @Override
@@ -50,7 +46,7 @@ public abstract class JetComponentBlock extends Block implements EntityBlock, IW
         return (facingAway instanceof JetComponentBlock || facing instanceof JetComponentBlock);
     }
 
-    protected static ArrayList<JetComponentBlock> getAttachedComponentsRecursive(Level level, BlockPos pos, Direction direction, JetComponentBlock thisBlock) {
+    private static ArrayList<JetComponentBlock> getAttachedComponentsRecursive(Level level, BlockPos pos, Direction direction, JetComponentBlock thisBlock) {
 
         Block nextComponent = level.getBlockState(pos.relative(direction)).getBlock();
         ArrayList<JetComponentBlock> attachedAfter = new ArrayList<>();

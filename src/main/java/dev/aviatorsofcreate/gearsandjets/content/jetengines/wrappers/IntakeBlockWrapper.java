@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.content.jetengines.simple;
+package dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SimpleIntakeBlock extends IntakeBlock {
+public class IntakeBlockWrapper extends IntakeBlock {
     private static final Map<Direction, VoxelShape> SHAPES = BlockShapeHelper.horizontalShapes(
             Direction.SOUTH,
             BlockShapeHelper.or(
@@ -24,7 +24,7 @@ public class SimpleIntakeBlock extends IntakeBlock {
             )
     );
 
-    public SimpleIntakeBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
+    public IntakeBlockWrapper(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties, sableBlockWeight);
     }
 

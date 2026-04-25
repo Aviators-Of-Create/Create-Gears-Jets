@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.content.jetengines.simple;
+package dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SimpleExhaustBlock extends ExhaustBlock {
+public class ExhaustBlockWrapper extends ExhaustBlock {
     private static final Map<Direction, VoxelShape> SHAPES = BlockShapeHelper.horizontalShapes(
             Direction.SOUTH,
             BlockShapeHelper.or(
@@ -30,7 +30,7 @@ public class SimpleExhaustBlock extends ExhaustBlock {
             )
     );
 
-    public SimpleExhaustBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
+    public ExhaustBlockWrapper(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties, sableBlockWeight);
     }
 

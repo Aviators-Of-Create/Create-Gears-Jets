@@ -1,9 +1,9 @@
 package dev.aviatorsofcreate.gearsandjets.content;
 
 import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.simple.SimpleCombustionChamberBlock;
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.simple.SimpleExhaustBlock;
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.simple.SimpleIntakeBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers.CombustionChamberBlockWrapper;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers.ExhaustBlockWrapper;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers.IntakeBlockWrapper;
 import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_spring.SmartTorsionSpringBlock;
 import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -15,20 +15,20 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(CreateGearsandJets.MODID);
-    public static final DeferredBlock<SimpleIntakeBlock> SIMPLE_INTAKE = BLOCKS.register(
+    public static final DeferredBlock<IntakeBlockWrapper> SIMPLE_INTAKE = BLOCKS.register(
             "simple_intake",
-            () -> new SimpleIntakeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).noOcclusion(), SableBlockWeight.HEAVY)
+            () -> new IntakeBlockWrapper(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).noOcclusion(), SableBlockWeight.HEAVY)
     );
-    public static final DeferredBlock<SimpleCombustionChamberBlock> SIMPLE_COMBUSTION_CHAMBER = BLOCKS.register(
+    public static final DeferredBlock<CombustionChamberBlockWrapper> SIMPLE_COMBUSTION_CHAMBER = BLOCKS.register(
             "simple_combustion_chamber",
-            () -> new SimpleCombustionChamberBlock(
+            () -> new CombustionChamberBlockWrapper(
                     BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).noOcclusion(),
                     SableBlockWeight.HEAVY
             )
     );
-    public static final DeferredBlock<SimpleExhaustBlock> SIMPLE_EXHAUST = BLOCKS.register(
+    public static final DeferredBlock<ExhaustBlockWrapper> SIMPLE_EXHAUST = BLOCKS.register(
             "simple_exhaust",
-            () -> new SimpleExhaustBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).noOcclusion(), SableBlockWeight.HEAVY)
+            () -> new ExhaustBlockWrapper(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).noOcclusion(), SableBlockWeight.HEAVY)
     );
     public static final DeferredBlock<AirplaneSeatBlock> AIRPLANE_SEAT = BLOCKS.register(
             "airplane_seat",

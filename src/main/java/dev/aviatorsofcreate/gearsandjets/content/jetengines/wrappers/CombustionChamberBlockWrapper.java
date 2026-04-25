@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.content.jetengines.simple;
+package dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers;
 
 import dev.aviatorsofcreate.gearsandjets.Config;
 import java.util.Map;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SimpleCombustionChamberBlock extends BasicCombustionChamberBlock {
+public class CombustionChamberBlockWrapper extends BasicCombustionChamberBlock {
     private static final Map<Direction, VoxelShape> SHAPES = BlockShapeHelper.horizontalShapes(
             Direction.NORTH,
             BlockShapeHelper.or(
@@ -35,13 +35,8 @@ public class SimpleCombustionChamberBlock extends BasicCombustionChamberBlock {
             )
     );
 
-    public SimpleCombustionChamberBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
+    public CombustionChamberBlockWrapper(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties, sableBlockWeight);
-    }
-
-    @Override
-    public int getTankCapacity() {
-        return Config.SIMPLE_COMBUSTION_CHAMBER_CAPACITY.getAsInt();
     }
 
     @Override
