@@ -2,6 +2,7 @@ package dev.aviatorsofcreate.gearsandjets;
 
 import dev.aviatorsofcreate.gearsandjets.client.EngineIntakeParticleSpawner;
 import dev.aviatorsofcreate.gearsandjets.client.EngineParticleBridge;
+import dev.aviatorsofcreate.gearsandjets.client.ModPartialModels;
 import dev.aviatorsofcreate.gearsandjets.content.block.smart_torsion_spring.SmartTorsionSpringRenderer;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import net.minecraft.client.Minecraft;
@@ -21,6 +22,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 @EventBusSubscriber(modid = CreateGearsandJets.MODID, value = Dist.CLIENT)
 public class CreateGearsandJetsClient {
     public CreateGearsandJetsClient(ModContainer container) {
+        ModPartialModels.init();
         // Allows NeoForge to create a config screen for this mod's configs.
         // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
         // Do not forget to add translations for your config options to the en_us.json file.

@@ -4,8 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.bearing.BearingBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
+import dev.aviatorsofcreate.gearsandjets.client.ModPartialModels;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
@@ -17,9 +16,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SmartTorsionSpringRenderer extends KineticBlockEntityRenderer<SmartTorsionSpringBlockEntity> {
-    private static final PartialModel SPRING_PARTIAL =
-            PartialModel.of(CreateGearsandJets.location("block/smart_torsion_spring/spring"));
-
     public SmartTorsionSpringRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
     }
@@ -31,7 +27,7 @@ public class SmartTorsionSpringRenderer extends KineticBlockEntityRenderer<Smart
 
         Direction facing = be.getBlockState().getValue(SmartTorsionSpringBlock.FACING);
 
-        SuperByteBuffer spring = CachedBuffers.partial(SPRING_PARTIAL, be.getBlockState());
+        SuperByteBuffer spring = CachedBuffers.partial(ModPartialModels.SMART_TORSION_SPRING, be.getBlockState());
         float angle = be.interpolatedSpring(partialTicks);
         kineticRotationTransform(spring, be, facing.getAxis(), Mth.DEG_TO_RAD * angle, light);
         if (facing.getAxis().isHorizontal()) {

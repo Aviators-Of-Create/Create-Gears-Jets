@@ -9,6 +9,7 @@ import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -64,6 +65,12 @@ public class SmartTorsionSpringBlock extends DirectionalKineticBlock
         }
 
         return Mth.clamp(Math.round(Math.abs(fraction) * 15.0F), 0, 15);
+    }
+
+    @Override
+    protected void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(blockState, level, blockPos, block, neighborPos, movedByPiston);
+        this.withBlockEntityDo(level, blockPos, SmartTorsionSpringBlockEntity::onSignalChanged);
     }
 
     @Override

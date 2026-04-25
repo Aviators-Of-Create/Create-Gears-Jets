@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
+import com.simibubi.create.api.stress.BlockStressValues;
 import com.simibubi.create.content.contraptions.actors.seat.SeatInteractionBehaviour;
 import com.simibubi.create.content.contraptions.actors.seat.SeatMovementBehaviour;
 import dev.aviatorsofcreate.gearsandjets.content.item.ModItems;
@@ -69,6 +70,8 @@ public class CreateGearsandJets {
         event.enqueueWork(() -> {
             MovementBehaviour.REGISTRY.register(ModBlocks.AIRPLANE_SEAT.get(), new SeatMovementBehaviour());
             MovingInteractionBehaviour.REGISTRY.register(ModBlocks.AIRPLANE_SEAT.get(), new SeatInteractionBehaviour());
+            BlockStressValues.IMPACTS.register(ModBlocks.SMART_TORSION_SPRING.get(), () -> 16.0D);
+            BlockStressValues.CAPACITIES.register(ModBlocks.SMART_TORSION_SPRING.get(), () -> 8.0D);
         });
 
         if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {

@@ -69,6 +69,10 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
         return Math.abs(this.angleInput.getValue());
     }
 
+    public void onSignalChanged() {
+        this.springOutput.onTargetChanged();
+    }
+
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         super.addBehaviours(behaviours);
@@ -107,7 +111,11 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
     }
 
     private int getControlSignal(Direction side) {
-        return this.level.getSignal(this.worldPosition.relative(side), side);
+        BlockPos signalPos = this.worldPosition.relative(side);
+        return Math.max(
+                this.level.getSignal(signalPos, side),
+                this.level.getSignal(signalPos, side.getOpposite())
+        );
     }
 
     @Override
@@ -194,49 +202,58 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
                 this.customValidateKinetics();
             }
 
-            this.generatedSpeed = this.queuedSpeed;
-            super.tick();
+            boolean parentDriven = Math.abs(this.parent.getSpeed()) >= EPSILON;
+            if (parentDriven) {
+                this.lastSpringSpeed = this.parent.getSpeed();
+            }
 
-            this.oldAngle = this.angle;
-            if (this.rotationDurationTicks >= 0 && this.rotationProgressTicks <= this.rotationDurationTicks) {
-                this.rotationProgressTicks++;
+            double desiredTarget = this.parent.getTargetAngle();
+            double activeTarget = desiredTarget;
+            float availableSpeed = Math.abs(parentDriven ? this.parent.getSpeed() : this.lastSpringSpeed);
 
-                float angularSpeed = KineticBlockEntity.convertToAngular(this.speed);
-                if (this.sequencedAngleLimit >= 0) {
-                    angularSpeed = (float) Mth.clamp(angularSpeed, -this.sequencedAngleLimit, this.sequencedAngleLimit);
-                    this.sequencedAngleLimit = Math.max(0, this.sequencedAngleLimit - Math.abs(angularSpeed));
-                }
-
-                this.angle += angularSpeed;
-
-                if (this.rotationProgressTicks == this.rotationDurationTicks) {
-                    this.sequenceContext = null;
-                    this.rotationProgressTicks = -1;
-                    this.rotationDurationTicks = -1;
-                    this.queuedSpeed = 0;
-                    this.reActivateSource = true;
-                    this.updateSpeed = true;
-                    this.currentState = State.STOPPED;
+            if (!parentDriven) {
+                if (Math.abs(desiredTarget) < EPSILON && Math.abs(this.angle) > EPSILON) {
+                    activeTarget = 0.0D;
+                } else {
+                    activeTarget = this.angle;
+                    availableSpeed = 0.0F;
                 }
             }
 
-            boolean parentStopped = this.parent.getSpeed() == 0;
-            double desiredTarget = this.parent.getTargetAngle();
+            double angleError = activeTarget - this.angle;
+            float desiredGeneratedSpeed = 0.0F;
+            double settleWindow = EPSILON;
+            if (availableSpeed >= EPSILON) {
+                double fullStep = KineticBlockEntity.convertToAngular(availableSpeed);
+                if (this.parent.sequencedAngleLimit >= 0) {
+                    fullStep = Math.min(fullStep, this.parent.sequencedAngleLimit);
+                }
 
-            if (this.currentState == State.TURNING && parentStopped) {
-                if (this.targetAngle != 0 || desiredTarget != 0) {
-                    this.stopTurning();
+                settleWindow = Math.max(fullStep * 0.35D, 0.25D);
+                if (Math.abs(angleError) > settleWindow) {
+                    double slowDownWindow = Math.max(fullStep * 4.0D, 1.0D);
+                    float scaledSpeed = (float) (availableSpeed * Mth.clamp(Math.abs(angleError) / slowDownWindow, 0.0D, 1.0D));
+                    float minimumSpeed = Math.min(availableSpeed, 4.0F);
+                    desiredGeneratedSpeed = Math.copySign(Math.max(minimumSpeed, scaledSpeed), (float) angleError);
                 }
-            } else if (this.currentState == State.STOPPED && parentStopped) {
-                if (Math.abs(this.targetAngle) < EPSILON && desiredTarget == 0.0D && Math.abs(this.angle) > EPSILON) {
-                    this.beginTurnTo(0.0D);
+            }
+
+            this.setGeneratedSpeed(desiredGeneratedSpeed, activeTarget);
+            super.tick();
+
+            this.oldAngle = this.angle;
+            if (Math.abs(desiredGeneratedSpeed) >= EPSILON && Math.abs(angleError) >= EPSILON) {
+                double step = KineticBlockEntity.convertToAngular(Math.abs(desiredGeneratedSpeed));
+                if (this.parent.sequencedAngleLimit >= 0) {
+                    step = Math.min(step, this.parent.sequencedAngleLimit);
                 }
-            } else if (this.currentState == State.TURNING) {
-                if (this.targetAngle != desiredTarget || this.lastSpringSpeed != this.generatedSpeed) {
-                    this.stopTurning();
-                }
-            } else if (!parentStopped && this.currentState == State.STOPPED) {
-                this.beginTurnTo(desiredTarget);
+
+                double applied = Math.min(Math.abs(angleError), step);
+                this.angle += Math.signum(angleError) * applied;
+            }
+
+            if (Math.abs(activeTarget - this.angle) <= settleWindow) {
+                this.angle = activeTarget;
             }
         }
 
@@ -272,52 +289,32 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
             }
         }
 
-        private void stopTurning() {
+        private void onTargetChanged() {
+            if (this.level == null || this.level.isClientSide) {
+                return;
+            }
+
+            this.reActivateSource = true;
+            this.updateSpeed = true;
+            this.setChanged();
+        }
+
+        private void setGeneratedSpeed(float desiredSpeed, double activeTarget) {
+            desiredSpeed = Math.round(desiredSpeed * 2.0F) / 2.0F;
+            boolean sameSpeed = Math.abs(this.queuedSpeed - desiredSpeed) < 0.25F;
+            this.targetAngle = activeTarget;
+            this.currentState = Math.abs(desiredSpeed) < EPSILON ? State.STOPPED : State.TURNING;
+            this.generatedSpeed = desiredSpeed;
+            this.queuedSpeed = desiredSpeed;
+
+            if (sameSpeed) {
+                return;
+            }
+
             this.sequenceContext = null;
             this.rotationProgressTicks = -1;
             this.rotationDurationTicks = -1;
             this.sequencedAngleLimit = -1;
-            this.targetAngle = Double.MAX_VALUE;
-            this.reActivateSource = true;
-            this.updateSpeed = true;
-            this.queuedSpeed = 0;
-            this.currentState = State.STOPPED;
-        }
-
-        private void beginTurnTo(double targetAngle) {
-            double relativeAngle = targetAngle - this.angle;
-            if (Math.abs(relativeAngle) < EPSILON) {
-                return;
-            }
-            if (this.currentState == State.TURNING && this.targetAngle == targetAngle) {
-                return;
-            }
-            if (Math.abs(this.lastSpringSpeed) < EPSILON) {
-                this.lastSpringSpeed = this.parent.getSpeed();
-            }
-            if (Math.abs(this.lastSpringSpeed) < EPSILON) {
-                return;
-            }
-
-            this.lastSpringSpeed = (float) (Math.abs(this.lastSpringSpeed) * Math.signum(relativeAngle));
-            if (this.parent.sequencedAngleLimit >= 0) {
-                relativeAngle = Mth.clamp(relativeAngle, -this.parent.sequencedAngleLimit, this.parent.sequencedAngleLimit);
-            }
-
-            this.detachKinetics();
-            this.targetAngle = targetAngle;
-            this.sequenceContext = new SequencedGearshiftBlockEntity.SequenceContext(
-                    SequencerInstructions.TURN_ANGLE,
-                    relativeAngle / this.lastSpringSpeed
-            );
-
-            double degreesPerTick = KineticBlockEntity.convertToAngular(Math.abs(this.lastSpringSpeed));
-            this.rotationDurationTicks = (int) Math.ceil(Math.abs(relativeAngle) / degreesPerTick) + 2;
-            this.rotationProgressTicks = 0;
-            this.sequencedAngleLimit = this.sequenceContext.getEffectiveValue(this.lastSpringSpeed);
-            this.currentState = State.TURNING;
-            this.queuedSpeed = this.lastSpringSpeed;
-            this.generatedSpeed = this.queuedSpeed;
             this.reActivateSource = true;
             this.updateSpeed = true;
         }
