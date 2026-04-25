@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import dev.aviatorsofcreate.gearsandjets.block.CombustionChamberBlock;
 import dev.aviatorsofcreate.gearsandjets.block.ExhaustBlock;
+import dev.ryanhcode.sable.api.block.propeller.BlockEntityPropeller;
+import dev.ryanhcode.sable.api.block.propeller.BlockEntitySubLevelPropellerActor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,11 +19,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
-public class CombustionChamberBlockEntity extends SmartBlockEntity {
+public class CombustionChamberBlockEntity extends SmartBlockEntity implements BlockEntitySubLevelPropellerActor, BlockEntityPropeller {
 
-    float fuelTicks = 0;
+    private float fuelTicks = 0;
     private SmartFluidTankBehaviour tank;
-    int signal = 0;
+    private int signal = 0;
+    private double thrust = 0;
+    private boolean active = false;
 
     public CombustionChamberBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -37,6 +41,11 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
 
     public void setSignal(int signal) {
         this.signal = signal;
+    }
+
+    @Override
+    public double getThrust() {
+        return this.thrust;
     }
 
     public boolean isPowered() {
@@ -89,6 +98,25 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         tank = SmartFluidTankBehaviour.single(this, 500);
         behaviours.add(tank);
+    }
+
+    public BlockEntityPropeller getPropeller() {
+        return this;
+    }
+
+    @Override
+    public Direction getBlockDirection() {
+        return this.getBlockState().getValue(CombustionChamberBlock.FACING);
+    }
+
+    @Override
+    public double getAirflow() {
+        return this.thrust / 3;
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.active;
     }
 
     @Override

@@ -149,27 +149,4 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
 
         level.destroyBlock(attachedPos, false);
     }
-
-    @Override
-    protected void neighborChanged(
-            BlockState state,
-            Level level,
-            BlockPos pos,
-            Block block,
-            BlockPos fromPos,
-            boolean isMoving
-    ) {
-        if (level.isClientSide()) return;
-
-        boolean powered = level.getBestNeighborSignal(pos) > 0;
-
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof CombustionChamberBlockEntity chamber) {
-            chamber.setSignal(level.getBestNeighborSignal(pos));
-        }
-
-        if (state.getValue(POWERED) != powered) {
-            level.setBlock(pos, state.setValue(POWERED, powered), 3);
-        }
-    }
 }
