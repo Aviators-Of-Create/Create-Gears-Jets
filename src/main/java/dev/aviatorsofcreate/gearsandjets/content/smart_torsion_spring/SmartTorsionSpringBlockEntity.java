@@ -100,14 +100,14 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
     }
 
     public double getTargetAngle() {
-        if (level == null) {
-            return 0.0D;
-        }
+        if (level == null) return 0.0D;
 
         int positiveSignal = getControlSignal(SmartTorsionSpringBlock.getPositiveSignalDirection(this.getBlockState()));
         int negativeSignal = getControlSignal(SmartTorsionSpringBlock.getNegativeSignalDirection(this.getBlockState()));
         double normalized = (positiveSignal - negativeSignal) / 15.0D;
-        return getMaxAngle() * Mth.clamp(normalized, -1.0D, 1.0D);
+        double raw = getMaxAngle() * Mth.clamp(normalized, -1.0D, 1.0D);
+        // Round to avoid irrational results from integer/15 division
+        return Math.round(raw * 10000.0) / 10000.0;
     }
 
     private int getControlSignal(Direction side) {
@@ -304,21 +304,27 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
         }
 
         private void stopTurning() {
+            // Snap to target if interrupted close enough, prevents drift accumulation
+            if (this.targetAngle != Double.MAX_VALUE
+                    && Math.abs(this.angle - this.targetAngle) < 1.0) {
+                this.angle = this.targetAngle;
+            }
+
             this.sequenceContext = null;
             this.rotationProgressTicks = -1;
             this.rotationDurationTicks = -1;
             this.sequencedAngleLimit = -1;
             this.targetAngle = Double.MAX_VALUE;
-
             this.reActivateSource = true;
             this.updateSpeed = true;
             this.queuedSpeed = 0;
             this.generatedSpeed = 0;
-
             this.currentState = State.STOPPED;
         }
 
         private void beginTurnTo(double targetAngle) {
+            targetAngle = Math.round(targetAngle * 10000.0) / 10000.0;
+
             double relativeAngle = targetAngle - this.angle;
 
             if (Math.abs(relativeAngle) < EPSILON) {
