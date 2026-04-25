@@ -99,22 +99,15 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
         this.springOutput.updateParentSpeed(previousSpeed, this.getSpeed());
     }
 
-    public double getTargetAngle(float driveSpeed) {
+    public double getTargetAngle() {
         if (level == null) {
             return 0.0D;
         }
 
-        if (Math.abs(driveSpeed) < EPSILON) {
-            return 0.0D;
-        }
-
-        if (driveSpeed > 0) {
-            int positiveSignal = getControlSignal(SmartTorsionSpringBlock.getPositiveSignalDirection(this.getBlockState()));
-            return getMaxAngle() * Mth.clamp(positiveSignal / 15.0D, 0.0D, 1.0D);
-        }
-
+        int positiveSignal = getControlSignal(SmartTorsionSpringBlock.getPositiveSignalDirection(this.getBlockState()));
         int negativeSignal = getControlSignal(SmartTorsionSpringBlock.getNegativeSignalDirection(this.getBlockState()));
-        return -getMaxAngle() * Mth.clamp(negativeSignal / 15.0D, 0.0D, 1.0D);
+        double normalized = (positiveSignal - negativeSignal) / 15.0D;
+        return getMaxAngle() * Mth.clamp(normalized, -1.0D, 1.0D);
     }
 
     private int getControlSignal(Direction side) {
@@ -216,7 +209,8 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
 
             float driveSpeed = parentDriven ? this.parent.getSpeed() : this.lastSpringSpeed;
             float availableSpeed = Math.abs(driveSpeed);
-            double activeTarget = parentDriven ? this.parent.getTargetAngle(driveSpeed) : 0.0D;
+            double desiredTarget = this.parent.getTargetAngle();
+            double activeTarget = desiredTarget;
             double angleError = activeTarget - this.angle;
             float desiredGeneratedSpeed = 0.0F;
             double settleWindow = EPSILON;
@@ -229,17 +223,19 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
 
                 settleWindow = Math.max(fullStep * 0.35D, 0.25D);
                 if (parentDriven) {
-                    if (Math.signum(angleError) == Math.signum(driveSpeed) && Math.abs(angleError) > settleWindow) {
+                    if (Math.abs(angleError) > settleWindow) {
                         double slowDownWindow = Math.max(fullStep * 4.0D, 1.0D);
                         float scaledSpeed = (float) (availableSpeed * Mth.clamp(Math.abs(angleError) / slowDownWindow, 0.0D, 1.0D));
                         float minimumSpeed = Math.min(availableSpeed, 4.0F);
-                        desiredGeneratedSpeed = Math.copySign(Math.max(minimumSpeed, scaledSpeed), driveSpeed);
+                        desiredGeneratedSpeed = Math.copySign(Math.max(minimumSpeed, scaledSpeed), (float) angleError);
                     }
-                } else if (Math.abs(this.angle) > settleWindow) {
+                } else if (Math.abs(desiredTarget) < settleWindow && Math.abs(this.angle) > settleWindow) {
                     double slowDownWindow = Math.max(fullStep * 4.0D, 1.0D);
                     float scaledSpeed = (float) (availableSpeed * Mth.clamp(Math.abs(this.angle) / slowDownWindow, 0.0D, 1.0D));
                     float minimumSpeed = Math.min(availableSpeed, 4.0F);
                     desiredGeneratedSpeed = -Math.copySign(Math.max(minimumSpeed, scaledSpeed), (float) this.angle);
+                    activeTarget = 0.0D;
+                    angleError = -this.angle;
                 }
             }
 
