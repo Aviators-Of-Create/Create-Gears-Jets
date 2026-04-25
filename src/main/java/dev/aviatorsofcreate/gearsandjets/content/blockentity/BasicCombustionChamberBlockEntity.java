@@ -53,7 +53,7 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
     }
 
     private boolean updateFuel(SmartFluidTankBehaviour tankBehaviour, int redstone) {
-        int fluidRemoved = redstone / 15;
+        int fluidRemoved = getMaxBurnRate() * redstone / 15;
         if (tankBehaviour.getPrimaryHandler().getFluidAmount() < fluidRemoved) {
             return false;
         }
@@ -63,17 +63,18 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
 
     private void updateThrust() {
         double thrust = 0;
+        float multiplier = getThrustMultiplier();
         switch (this.getBlockState().getValue(MACHINE_STATE)) {
             case OFF:
                 this.active = false;
                 break;
             case IDLING:
                 this.active = true;
-                thrust = 200 * this.signal / ( 15 * 3.156925 );
+                thrust = multiplier * this.signal / ( 15 * 3.156925 );
                 break;
             case RUNNING:
                 this.active = true;
-                thrust = 200 * Math.pow((double) this.signal / 15, 3.5);
+                thrust = multiplier * Math.pow((double) this.signal / 15, 3.5);
                 break;
             default:
                 throw new IllegalStateException("Jet engine has invalid blockstate!");
@@ -81,7 +82,7 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
         this.thrust = thrust;
     }
 
-    private void emitExhaustParticles(Level level, boolean running) {
+    private void emitExhaustParticles(Level level) {
         BlockState chamberState = this.getBlockState();
         if (!chamberState.hasProperty(BasicCombustionChamberBlock.FACING)) {
             return;
@@ -172,10 +173,10 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, OFF));
             } else if (!running) {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, IDLING));
-                emitExhaustParticles(level, false);
+                emitExhaustParticles(level);
             } else {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, RUNNING));
-                emitExhaustParticles(level, true);
+                emitExhaustParticles(level);
             }
 
             if (state.hasProperty(BasicCombustionChamberBlock.POWERED) && state.getValue(BasicCombustionChamberBlock.POWERED) != powered) {

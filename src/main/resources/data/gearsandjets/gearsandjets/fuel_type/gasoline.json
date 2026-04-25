@@ -1,0 +1,9 @@
+{
+  "fluid": "#c:gasoline",
+  "pitch_multiplier": 1.5,
+  "basic": {
+    "thrust": 300,
+    "burn_rate": 5,
+    "startup_cost": 25
+  }
+}

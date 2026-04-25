@@ -1,0 +1,9 @@
+{
+  "fluid": "#c:ethanol",
+  "pitch_multiplier": 1,
+  "basic": {
+    "thrust": 200,
+    "burn_rate": 10,
+    "startup_cost": 50
+  }
+}
