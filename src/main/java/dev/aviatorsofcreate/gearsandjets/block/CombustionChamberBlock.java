@@ -29,12 +29,13 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final Property<Boolean> POWERED = BlockStateProperties.POWERED;
     private final SableBlockWeight sableBlockWeight;
-    private CombustionChamberBlockEntity blockEntity;
 
     protected CombustionChamberBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties);
         this.sableBlockWeight = sableBlockWeight;
-        registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(POWERED, false));
     }
 
     public abstract int getTankCapacity();
@@ -45,8 +46,7 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        blockEntity = new CombustionChamberBlockEntity(ModBlockEntityTypes.COMBUSTION_CHAMBER.get(), pos, state);
-        return blockEntity;
+        return new CombustionChamberBlockEntity(ModBlockEntityTypes.COMBUSTION_CHAMBER.get(), pos, state);
     }
 
     @Override
@@ -106,7 +106,7 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, POWERED);
     }
 
     private static void collectAttachedBlock(Level level, BlockPos attachedPos, @Nullable Player player, ItemStack tool, ServerLevel serverLevel) {
@@ -148,8 +148,10 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
 
         boolean powered = level.getBestNeighborSignal(pos) > 0;
 
-        // Set powered state on block entity
-        blockEntity.setSignal(level.getBestNeighborSignal(pos));
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof CombustionChamberBlockEntity chamber) {
+            chamber.setSignal(level.getBestNeighborSignal(pos));
+        }
 
         if (state.getValue(POWERED) != powered) {
             level.setBlock(pos, state.setValue(POWERED, powered), 3);

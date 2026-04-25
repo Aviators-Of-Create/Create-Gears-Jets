@@ -58,13 +58,18 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity {
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         tank = SmartFluidTankBehaviour.single(this, 500);
+        behaviours.add(tank);
     }
 
     @Override
     public void tick() {
         if (!this.getLevel().isClientSide && this.signal > 0 ) {
             updateFuel(this.tank, this.signal);
-            this.getLevel().setBlockAndUpdate(this.getBlockPos(), this.getBlockState().setValue(CombustionChamberBlock.POWERED, this.signal > 0));
+            BlockState state = this.getBlockState();
+            boolean powered = this.signal > 0;
+            if (state.hasProperty(CombustionChamberBlock.POWERED) && state.getValue(CombustionChamberBlock.POWERED) != powered) {
+                this.getLevel().setBlockAndUpdate(this.getBlockPos(), state.setValue(CombustionChamberBlock.POWERED, powered));
+            }
         }
 
         super.tick();
