@@ -1,7 +1,7 @@
 package dev.aviatorsofcreate.gearsandjets.registry;
 
 import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
-import dev.aviatorsofcreate.gearsandjets.item.ModItems;
+import dev.aviatorsofcreate.gearsandjets.content.item.ModItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;

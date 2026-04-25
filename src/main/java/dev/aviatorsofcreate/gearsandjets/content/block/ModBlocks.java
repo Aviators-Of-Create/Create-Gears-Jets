@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.block;
+package dev.aviatorsofcreate.gearsandjets.content.block;
 
 import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
 import net.minecraft.world.level.block.state.BlockBehaviour;

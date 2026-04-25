@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.block;
+package dev.aviatorsofcreate.gearsandjets.content.block;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -87,8 +87,8 @@ public abstract class IntakeBlock extends Block {
     private static boolean isValidCombustionChamber(LevelReader level, BlockPos intakePos, Direction facing) {
         BlockPos chamberPos = intakePos.relative(facing.getOpposite());
         BlockState chamberState = level.getBlockState(chamberPos);
-        return chamberState.getBlock() instanceof CombustionChamberBlock
-                && chamberState.hasProperty(CombustionChamberBlock.FACING)
-                && chamberState.getValue(CombustionChamberBlock.FACING) == facing;
+        return chamberState.getBlock() instanceof BasicCombustionChamberBlock
+                && chamberState.hasProperty(BasicCombustionChamberBlock.FACING)
+                && chamberState.getValue(BasicCombustionChamberBlock.FACING) == facing;
     }
 }

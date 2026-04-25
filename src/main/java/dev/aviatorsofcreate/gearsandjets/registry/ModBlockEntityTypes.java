@@ -1,11 +1,8 @@
 package dev.aviatorsofcreate.gearsandjets.registry;
 
 import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
-import dev.aviatorsofcreate.gearsandjets.block.CombustionChamberBlock;
-import dev.aviatorsofcreate.gearsandjets.block.ExhaustBlock;
-import dev.aviatorsofcreate.gearsandjets.block.IntakeBlock;
-import dev.aviatorsofcreate.gearsandjets.block.ModBlocks;
-import dev.aviatorsofcreate.gearsandjets.blockentity.CombustionChamberBlockEntity;
+import dev.aviatorsofcreate.gearsandjets.content.block.*;
+import dev.aviatorsofcreate.gearsandjets.content.blockentity.BasicCombustionChamberBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -22,11 +19,11 @@ public final class ModBlockEntityTypes {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, CreateGearsandJets.MODID);
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CombustionChamberBlockEntity>> COMBUSTION_CHAMBER =
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BasicCombustionChamberBlockEntity>> COMBUSTION_CHAMBER =
             BLOCK_ENTITY_TYPES.register(
                     "combustion_chamber",
                     () -> BlockEntityType.Builder.of(
-                            (pos, state) -> new CombustionChamberBlockEntity(getCombustionChamberType(), pos, state),
+                            (pos, state) -> new BasicCombustionChamberBlockEntity(getCombustionChamberType(), pos, state),
                             ModBlocks.SIMPLE_COMBUSTION_CHAMBER.get()
                     ).build(null)
             );
@@ -48,7 +45,7 @@ public final class ModBlockEntityTypes {
         event.registerBlock(
                 Capabilities.FluidHandler.BLOCK,
                 (level, pos, state, blockEntity, side) -> {
-                    CombustionChamberBlockEntity chamber = getAttachedCombustionChamber(level, pos, state);
+                    BasicCombustionChamberBlockEntity chamber = getAttachedCombustionChamber(level, pos, state);
                     return chamber != null ? chamber.getFluidHandler() : null;
                 },
                 ModBlocks.SIMPLE_INTAKE.get(),
@@ -56,11 +53,11 @@ public final class ModBlockEntityTypes {
         );
     }
 
-    private static BlockEntityType<CombustionChamberBlockEntity> getCombustionChamberType() {
+    private static BlockEntityType<BasicCombustionChamberBlockEntity> getCombustionChamberType() {
         return COMBUSTION_CHAMBER.get();
     }
 
-    private static CombustionChamberBlockEntity getAttachedCombustionChamber(Level level, BlockPos pos, BlockState state) {
+    private static BasicCombustionChamberBlockEntity getAttachedCombustionChamber(Level level, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof IntakeBlock && state.hasProperty(IntakeBlock.FACING)) {
             Direction facing = state.getValue(IntakeBlock.FACING);
             return getCombustionChamber(level, pos.relative(facing.getOpposite()), facing);
@@ -74,14 +71,14 @@ public final class ModBlockEntityTypes {
         return null;
     }
 
-    private static CombustionChamberBlockEntity getCombustionChamber(Level level, BlockPos chamberPos, Direction expectedFacing) {
+    private static BasicCombustionChamberBlockEntity getCombustionChamber(Level level, BlockPos chamberPos, Direction expectedFacing) {
         BlockState chamberState = level.getBlockState(chamberPos);
-        if (!(chamberState.getBlock() instanceof CombustionChamberBlock)
-                || !chamberState.hasProperty(CombustionChamberBlock.FACING)
-                || chamberState.getValue(CombustionChamberBlock.FACING) != expectedFacing) {
+        if (!(chamberState.getBlock() instanceof BasicCombustionChamberBlock)
+                || !chamberState.hasProperty(BasicCombustionChamberBlock.FACING)
+                || chamberState.getValue(BasicCombustionChamberBlock.FACING) != expectedFacing) {
             return null;
         }
 
-        return level.getBlockEntity(chamberPos) instanceof CombustionChamberBlockEntity chamber ? chamber : null;
+        return level.getBlockEntity(chamberPos) instanceof BasicCombustionChamberBlockEntity chamber ? chamber : null;
     }
 }

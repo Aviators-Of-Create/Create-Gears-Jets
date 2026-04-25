@@ -1,7 +1,7 @@
-package dev.aviatorsofcreate.gearsandjets.block;
+package dev.aviatorsofcreate.gearsandjets.content.block;
 
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
-import dev.aviatorsofcreate.gearsandjets.blockentity.CombustionChamberBlockEntity;
+import dev.aviatorsofcreate.gearsandjets.content.blockentity.BasicCombustionChamberBlockEntity;
 import dev.aviatorsofcreate.gearsandjets.enums.MachineState;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
@@ -29,7 +29,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CombustionChamberBlock extends Block implements EntityBlock, IWrenchable {
+public abstract class BasicCombustionChamberBlock extends Block implements EntityBlock, IWrenchable {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final Property<Boolean> POWERED = BlockStateProperties.POWERED;
     private final SableBlockWeight sableBlockWeight;
@@ -37,7 +37,7 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
     public static final EnumProperty<MachineState> MACHINE_STATE =
             EnumProperty.create("machine_state", MachineState.class);
 
-    protected CombustionChamberBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
+    protected BasicCombustionChamberBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties);
         this.sableBlockWeight = sableBlockWeight;
         registerDefaultState(this.stateDefinition.any()
@@ -55,7 +55,7 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CombustionChamberBlockEntity(ModBlockEntityTypes.COMBUSTION_CHAMBER.get(), pos, state);
+        return new BasicCombustionChamberBlockEntity(ModBlockEntityTypes.COMBUSTION_CHAMBER.get(), pos, state);
     }
 
     @Override
@@ -65,7 +65,7 @@ public abstract class CombustionChamberBlock extends Block implements EntityBloc
         }
 
         return (tickerLevel, tickerPos, tickerState, blockEntity) -> {
-            if (blockEntity instanceof CombustionChamberBlockEntity chamber) {
+            if (blockEntity instanceof BasicCombustionChamberBlockEntity chamber) {
                 chamber.tick();
             }
         };

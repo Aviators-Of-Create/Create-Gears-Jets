@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.block;
+package dev.aviatorsofcreate.gearsandjets.content.block;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.block;
+package dev.aviatorsofcreate.gearsandjets.content.block;
 
 import dev.aviatorsofcreate.gearsandjets.Config;
 import java.util.Map;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SimpleCombustionChamberBlock extends CombustionChamberBlock {
+public class SimpleCombustionChamberBlock extends BasicCombustionChamberBlock {
     private static final Map<Direction, VoxelShape> SHAPES = BlockShapeHelper.horizontalShapes(
             Direction.NORTH,
             BlockShapeHelper.or(

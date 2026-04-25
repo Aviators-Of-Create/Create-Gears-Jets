@@ -1,15 +1,14 @@
 package dev.aviatorsofcreate.gearsandjets;
 
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
-
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.actors.seat.SeatInteractionBehaviour;
 import com.simibubi.create.content.contraptions.actors.seat.SeatMovementBehaviour;
-
-import dev.aviatorsofcreate.gearsandjets.item.ModItems;
-import dev.aviatorsofcreate.gearsandjets.block.ModBlocks;
+import dev.aviatorsofcreate.gearsandjets.content.item.ModItems;
+import dev.aviatorsofcreate.gearsandjets.content.block.ModBlocks;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import dev.aviatorsofcreate.gearsandjets.registry.ModCreativeModeTabs;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -73,5 +72,9 @@ public class CreateGearsandJets {
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
+    }
+
+    public static ResourceLocation location(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 }

@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.blockentity;
+package dev.aviatorsofcreate.gearsandjets.content.blockentity;
 
 import java.util.List;
 
@@ -6,8 +6,9 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
-import dev.aviatorsofcreate.gearsandjets.block.CombustionChamberBlock;
-import dev.aviatorsofcreate.gearsandjets.block.ExhaustBlock;
+import dev.aviatorsofcreate.gearsandjets.content.block.BasicCombustionChamberBlock;
+import dev.aviatorsofcreate.gearsandjets.content.block.ExhaustBlock;
+import dev.aviatorsofcreate.gearsandjets.content.interfaces.IEngine;
 import dev.ryanhcode.sable.api.block.propeller.BlockEntityPropeller;
 import dev.ryanhcode.sable.api.block.propeller.BlockEntitySubLevelPropellerActor;
 import net.minecraft.core.BlockPos;
@@ -18,19 +19,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
-import static dev.aviatorsofcreate.gearsandjets.block.CombustionChamberBlock.MACHINE_STATE;
+import static dev.aviatorsofcreate.gearsandjets.content.block.BasicCombustionChamberBlock.MACHINE_STATE;
 import static dev.aviatorsofcreate.gearsandjets.enums.MachineState.*;
 
-public class CombustionChamberBlockEntity extends SmartBlockEntity implements BlockEntitySubLevelPropellerActor, BlockEntityPropeller {
+public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implements BlockEntitySubLevelPropellerActor, BlockEntityPropeller, IEngine {
 
     private SmartFluidTankBehaviour tank;
     private int signal = 0;
-    private int signalLast = 0;
     private double thrust = 0;
     private boolean active = false;
+    int remainingTicks = 0;
 
-    public CombustionChamberBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public BasicCombustionChamberBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
@@ -51,7 +53,7 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
     }
 
     private boolean updateFuel(SmartFluidTankBehaviour tankBehaviour, int redstone) {
-        int fluidRemoved = 10 * redstone / 15;
+        int fluidRemoved = redstone / 15;
         if (tankBehaviour.getPrimaryHandler().getFluidAmount() < fluidRemoved) {
             return false;
         }
@@ -79,13 +81,13 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
         this.thrust = thrust;
     }
 
-    private void emitExhaustParticles(ServerLevel level) {
+    private void emitExhaustParticles(Level level, boolean running) {
         BlockState chamberState = this.getBlockState();
-        if (!chamberState.hasProperty(CombustionChamberBlock.FACING)) {
+        if (!chamberState.hasProperty(BasicCombustionChamberBlock.FACING)) {
             return;
         }
 
-        Direction chamberFacing = chamberState.getValue(CombustionChamberBlock.FACING);
+        Direction chamberFacing = chamberState.getValue(BasicCombustionChamberBlock.FACING);
         BlockPos exhaustPos = this.getBlockPos().relative(chamberFacing.getOpposite());
         BlockState exhaustState = level.getBlockState(exhaustPos);
         if (!(exhaustState.getBlock() instanceof ExhaustBlock)
@@ -107,8 +109,8 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
             double y = baseY + i * 0.015D;
             double z = baseZ + dirZ * distance;
 
-            level.sendParticles(ParticleTypes.LARGE_SMOKE, x, y, z, 2, 0.08D, 0.05D, 0.08D, 0.009D);
-            level.sendParticles(ParticleTypes.SMOKE, x, y, z, 1, 0.05D, 0.035D, 0.05D, 0.007D);
+            level.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, 0, 0, 0);
+            level.addParticle(ParticleTypes.SMOKE, x, y, z, 0, 0, 0);
         }
 
         for (int i = 0; i < 2; i++) {
@@ -116,11 +118,11 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
             double x = baseX + dirX * distance;
             double y = baseY + 0.02D + i * 0.01D;
             double z = baseZ + dirZ * distance;
-            level.sendParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, x, y, z, 1, 0.025D, 0.02D, 0.025D, 0.009D);
+            level.addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, x, y, z, 0, 0, 0);
         }
 
-        level.sendParticles(ParticleTypes.LARGE_SMOKE, baseX, baseY, baseZ, 2, 0.1D, 0.07D, 0.1D, 0.01D);
-        level.sendParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, baseX, baseY, baseZ, 1, 0.04D, 0.025D, 0.04D, 0.009D);
+        level.addParticle(ParticleTypes.LARGE_SMOKE, baseX, baseY, baseZ, 0, 0, 0);
+        level.addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, baseX, baseY, baseZ, 0, 0, 0);
     }
 
     @Override
@@ -135,7 +137,7 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
 
     @Override
     public Direction getBlockDirection() {
-        return this.getBlockState().getValue(CombustionChamberBlock.FACING).getOpposite();
+        return this.getBlockState().getValue(BasicCombustionChamberBlock.FACING).getOpposite();
     }
 
     @Override
@@ -158,32 +160,45 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
         Level level = this.getLevel();
         if (level != null && !level.isClientSide) {
             this.signal = level.getBestNeighborSignal(this.getBlockPos());
+            boolean burnedFuel = updateFuel(this.tank, this.signal);
 
-            if (this.signal > 0) {
-                boolean burnedFuel = updateFuel(this.tank, this.signal);
-                if (burnedFuel && level instanceof ServerLevel serverLevel) {
-                    emitExhaustParticles(serverLevel);
-                }
-            }
 
             BlockState state = this.getBlockState();
             boolean powered = this.signal > 0;
             boolean running = this.signal > 3;
 
-            if (!powered) {
+
+            if (!powered && !burnedFuel) {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, OFF));
             } else if (!running) {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, IDLING));
+                emitExhaustParticles(level, false);
             } else {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, RUNNING));
+                emitExhaustParticles(level, true);
             }
 
-            if (state.hasProperty(CombustionChamberBlock.POWERED) && state.getValue(CombustionChamberBlock.POWERED) != powered) {
-                level.setBlockAndUpdate(this.getBlockPos(), state.setValue(CombustionChamberBlock.POWERED, powered));
+            if (state.hasProperty(BasicCombustionChamberBlock.POWERED) && state.getValue(BasicCombustionChamberBlock.POWERED) != powered) {
+                level.setBlockAndUpdate(this.getBlockPos(), state.setValue(BasicCombustionChamberBlock.POWERED, powered));
             }
             updateThrust();
         }
 
         super.tick();
+    }
+
+    @Override
+    public int getRemainingTicks() {
+        return remainingTicks;
+    }
+
+    @Override
+    public SmartBlockEntity self() {
+        return this;
+    }
+
+    @Override
+    public FluidTank getTank() {
+        return tank.getPrimaryHandler();
     }
 }
