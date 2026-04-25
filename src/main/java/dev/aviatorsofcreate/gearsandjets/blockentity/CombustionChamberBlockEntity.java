@@ -67,11 +67,11 @@ public class CombustionChamberBlockEntity extends SmartBlockEntity implements Bl
                 break;
             case IDLING:
                 this.active = true;
-                thrust = this.signal / ( 15 * 3.156925 );
+                thrust = 400 * this.signal / ( 15 * 3.156925 );
                 break;
             case RUNNING:
                 this.active = true;
-                thrust = Math.pow((double) this.signal / 15, 3.5);
+                thrust = 400 * Math.pow((double) this.signal / 15, 3.5);
                 break;
             default:
                 throw new IllegalStateException("Jet engine has invalid blockstate!");
