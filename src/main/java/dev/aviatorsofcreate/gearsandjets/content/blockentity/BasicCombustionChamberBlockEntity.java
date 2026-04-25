@@ -82,7 +82,7 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
         this.thrust = thrust;
     }
 
-    private void emitExhaustParticles(Level level) {
+    private void emitExhaustParticles(ServerLevel level) {
         BlockState chamberState = this.getBlockState();
         if (!chamberState.hasProperty(BasicCombustionChamberBlock.FACING)) {
             return;
@@ -162,6 +162,9 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
         if (level != null && !level.isClientSide) {
             this.signal = level.getBestNeighborSignal(this.getBlockPos());
             boolean burnedFuel = updateFuel(this.tank, this.signal);
+            if (burnedFuel && level instanceof ServerLevel serverLevel) {
+                emitExhaustParticles(serverLevel);
+            }
 
 
             BlockState state = this.getBlockState();
@@ -173,10 +176,8 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, OFF));
             } else if (!running) {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, IDLING));
-                emitExhaustParticles(level);
             } else {
                 level.setBlockAndUpdate(this.getBlockPos(), state.setValue(MACHINE_STATE, RUNNING));
-                emitExhaustParticles(level);
             }
 
             if (state.hasProperty(BasicCombustionChamberBlock.POWERED) && state.getValue(BasicCombustionChamberBlock.POWERED) != powered) {
