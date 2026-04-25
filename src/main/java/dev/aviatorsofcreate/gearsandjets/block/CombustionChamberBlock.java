@@ -20,18 +20,20 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class CombustionChamberBlock extends Block implements EntityBlock, IWrenchable {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final Property<Boolean> POWERED = BlockStateProperties.POWERED;
     private final SableBlockWeight sableBlockWeight;
 
     protected CombustionChamberBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties);
         this.sableBlockWeight = sableBlockWeight;
-        registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWERED, Boolean.TRUE));
     }
 
     public abstract int getTankCapacity();
