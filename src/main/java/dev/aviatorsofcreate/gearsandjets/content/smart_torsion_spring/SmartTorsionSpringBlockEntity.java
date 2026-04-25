@@ -99,15 +99,22 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
         this.springOutput.updateParentSpeed(previousSpeed, this.getSpeed());
     }
 
-    public double getTargetAngle() {
+    public double getTargetAngle(float driveSpeed) {
         if (level == null) {
             return 0.0D;
         }
 
-        int positiveSignal = getControlSignal(SmartTorsionSpringBlock.getPositiveSignalDirection(this.getBlockState()));
+        if (Math.abs(driveSpeed) < EPSILON) {
+            return 0.0D;
+        }
+
+        if (driveSpeed > 0) {
+            int positiveSignal = getControlSignal(SmartTorsionSpringBlock.getPositiveSignalDirection(this.getBlockState()));
+            return getMaxAngle() * Mth.clamp(positiveSignal / 15.0D, 0.0D, 1.0D);
+        }
+
         int negativeSignal = getControlSignal(SmartTorsionSpringBlock.getNegativeSignalDirection(this.getBlockState()));
-        double normalized = (positiveSignal - negativeSignal) / 15.0D;
-        return getMaxAngle() * Mth.clamp(normalized, -1.0D, 1.0D);
+        return -getMaxAngle() * Mth.clamp(negativeSignal / 15.0D, 0.0D, 1.0D);
     }
 
     private int getControlSignal(Direction side) {
@@ -207,22 +214,13 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
                 this.lastSpringSpeed = this.parent.getSpeed();
             }
 
-            double desiredTarget = this.parent.getTargetAngle();
-            double activeTarget = desiredTarget;
-            float availableSpeed = Math.abs(parentDriven ? this.parent.getSpeed() : this.lastSpringSpeed);
-
-            if (!parentDriven) {
-                if (Math.abs(desiredTarget) < EPSILON && Math.abs(this.angle) > EPSILON) {
-                    activeTarget = 0.0D;
-                } else {
-                    activeTarget = this.angle;
-                    availableSpeed = 0.0F;
-                }
-            }
-
+            float driveSpeed = parentDriven ? this.parent.getSpeed() : this.lastSpringSpeed;
+            float availableSpeed = Math.abs(driveSpeed);
+            double activeTarget = parentDriven ? this.parent.getTargetAngle(driveSpeed) : 0.0D;
             double angleError = activeTarget - this.angle;
             float desiredGeneratedSpeed = 0.0F;
             double settleWindow = EPSILON;
+
             if (availableSpeed >= EPSILON) {
                 double fullStep = KineticBlockEntity.convertToAngular(availableSpeed);
                 if (this.parent.sequencedAngleLimit >= 0) {
@@ -230,11 +228,18 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
                 }
 
                 settleWindow = Math.max(fullStep * 0.35D, 0.25D);
-                if (Math.abs(angleError) > settleWindow) {
+                if (parentDriven) {
+                    if (Math.signum(angleError) == Math.signum(driveSpeed) && Math.abs(angleError) > settleWindow) {
+                        double slowDownWindow = Math.max(fullStep * 4.0D, 1.0D);
+                        float scaledSpeed = (float) (availableSpeed * Mth.clamp(Math.abs(angleError) / slowDownWindow, 0.0D, 1.0D));
+                        float minimumSpeed = Math.min(availableSpeed, 4.0F);
+                        desiredGeneratedSpeed = Math.copySign(Math.max(minimumSpeed, scaledSpeed), driveSpeed);
+                    }
+                } else if (Math.abs(this.angle) > settleWindow) {
                     double slowDownWindow = Math.max(fullStep * 4.0D, 1.0D);
-                    float scaledSpeed = (float) (availableSpeed * Mth.clamp(Math.abs(angleError) / slowDownWindow, 0.0D, 1.0D));
+                    float scaledSpeed = (float) (availableSpeed * Mth.clamp(Math.abs(this.angle) / slowDownWindow, 0.0D, 1.0D));
                     float minimumSpeed = Math.min(availableSpeed, 4.0F);
-                    desiredGeneratedSpeed = Math.copySign(Math.max(minimumSpeed, scaledSpeed), (float) angleError);
+                    desiredGeneratedSpeed = -Math.copySign(Math.max(minimumSpeed, scaledSpeed), (float) this.angle);
                 }
             }
 
@@ -242,14 +247,16 @@ public class SmartTorsionSpringBlockEntity extends KineticBlockEntity implements
             super.tick();
 
             this.oldAngle = this.angle;
-            if (Math.abs(desiredGeneratedSpeed) >= EPSILON && Math.abs(angleError) >= EPSILON) {
-                double step = KineticBlockEntity.convertToAngular(Math.abs(desiredGeneratedSpeed));
+            float appliedSpeed = Math.abs(this.getTheoreticalSpeed()) >= EPSILON ? this.getTheoreticalSpeed() : desiredGeneratedSpeed;
+            if (Math.abs(appliedSpeed) >= EPSILON) {
+                double step = KineticBlockEntity.convertToAngular(Math.abs(appliedSpeed));
                 if (this.parent.sequencedAngleLimit >= 0) {
                     step = Math.min(step, this.parent.sequencedAngleLimit);
                 }
 
-                double applied = Math.min(Math.abs(angleError), step);
-                this.angle += Math.signum(angleError) * applied;
+                double remaining = Math.abs(activeTarget - this.angle);
+                double applied = Math.min(remaining, step);
+                this.angle += Math.signum(appliedSpeed) * applied;
             }
 
             if (Math.abs(activeTarget - this.angle) <= settleWindow) {
