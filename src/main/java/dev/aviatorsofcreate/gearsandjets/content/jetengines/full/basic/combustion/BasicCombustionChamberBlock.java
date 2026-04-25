@@ -80,36 +80,6 @@ public class BasicCombustionChamberBlock extends CombustionChamberBlock implemen
     }
 
     @Override
-    public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
-        Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        Player player = context.getPlayer();
-
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return InteractionResult.SUCCESS;
-        }
-
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
-        NeoForge.EVENT_BUS.post(event);
-        if (event.isCanceled()) {
-            return InteractionResult.SUCCESS;
-        }
-
-        collectAttachedBlock(level, pos.relative(state.getValue(FACING)), player, context.getItemInHand(), serverLevel);
-        collectAttachedBlock(level, pos.relative(state.getValue(FACING).getOpposite()), player, context.getItemInHand(), serverLevel);
-
-        if (player != null && !player.isCreative()) {
-            Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos), player, context.getItemInHand())
-                    .forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
-        }
-
-        state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY, true);
-        level.destroyBlock(pos, false);
-        IWrenchable.playRemoveSound(level, pos);
-        return InteractionResult.SUCCESS;
-    }
-
-    @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (!level.isClientSide && player.isCreative()) {
             destroyAttachedBlockWithoutDrops(level, pos.relative(state.getValue(FACING)));
@@ -132,32 +102,6 @@ public class BasicCombustionChamberBlock extends CombustionChamberBlock implemen
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWERED, MACHINE_STATE);
-    }
-
-    private static boolean hasAttachedIntakeOrExhaust(Level level, BlockPos pos, Direction facing) {
-        return isIntakeOrExhaust(level.getBlockState(pos.relative(facing)))
-                || isIntakeOrExhaust(level.getBlockState(pos.relative(facing.getOpposite())));
-    }
-
-    private static boolean isIntakeOrExhaust(BlockState state) {
-        Block block = state.getBlock();
-        return block instanceof IntakeBlock || block instanceof ExhaustBlock;
-    }
-
-    private static void collectAttachedBlock(Level level, BlockPos attachedPos, @Nullable Player player, ItemStack tool, ServerLevel serverLevel) {
-        BlockState attachedState = level.getBlockState(attachedPos);
-        Block attachedBlock = attachedState.getBlock();
-        if (!(attachedBlock instanceof IntakeBlock) && !(attachedBlock instanceof ExhaustBlock)) {
-            return;
-        }
-
-        if (player != null && !player.isCreative()) {
-            Block.getDrops(attachedState, serverLevel, attachedPos, level.getBlockEntity(attachedPos), player, tool)
-                    .forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
-        }
-
-        attachedState.spawnAfterBreak(serverLevel, attachedPos, ItemStack.EMPTY, true);
-        level.destroyBlock(attachedPos, false);
     }
 
     private static void destroyAttachedBlockWithoutDrops(Level level, BlockPos attachedPos) {
