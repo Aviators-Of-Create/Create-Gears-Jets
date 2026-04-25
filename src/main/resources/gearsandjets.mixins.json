@@ -3,6 +3,9 @@
   "package": "dev.aviatorsofcreate.gearsandjets.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
+  "client": [
+    "client.PropellerAirParticleMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },
