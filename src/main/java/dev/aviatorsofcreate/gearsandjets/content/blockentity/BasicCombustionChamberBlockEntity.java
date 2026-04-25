@@ -64,15 +64,25 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
         return fluidConsumed;
     }
 
-
-    private void updateThrust(int redstoneSignal) {
-
+    private void updateThrust() {
+        double thrust = 0;
         float multiplier = getThrustMultiplier();
-        this.thrust = switch (this.getBlockState().getValue(MACHINE_STATE)) {
-            case OFF -> 0;
-            case IDLING -> multiplier * redstoneSignal / (15 * 3.156925);
-            case RUNNING -> multiplier * Math.pow((double) redstoneSignal / 15, 3.5);
-        };
+        switch (this.getBlockState().getValue(MACHINE_STATE)) {
+            case OFF:
+                this.active = false;
+                break;
+            case IDLING:
+                this.active = true;
+                thrust = multiplier * this.signal / ( 15 * 3.156925 );
+                break;
+            case RUNNING:
+                this.active = true;
+                thrust = multiplier * Math.pow((double) this.signal / 15, 3.5);
+                break;
+            default:
+                throw new IllegalStateException("Jet engine has invalid blockstate!");
+        }
+        this.thrust = thrust;
     }
 
     private double calculateAirflow() {
@@ -201,7 +211,7 @@ public class BasicCombustionChamberBlockEntity extends SmartBlockEntity implemen
             this.signal = level.getBestNeighborSignal(this.getBlockPos());
         }
 
-        updateThrust(this.signal);
+        updateThrust();
 
         if (level != null && level.isClientSide) {
             emitIntakeParticles(level);
