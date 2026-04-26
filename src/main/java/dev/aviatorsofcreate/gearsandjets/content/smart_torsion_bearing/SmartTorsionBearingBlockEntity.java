@@ -84,8 +84,9 @@ public class SmartTorsionBearingBlockEntity extends MechanicalBearingBlockEntity
             return 0.0F;
         }
 
-        float diff = getTargetAngle() - getDisplayedAngle();
+        float diff = getWrappedTargetDelta();
         if (Math.abs(diff) < EPSILON) {
+            this.angle = getTargetAngle();
             return 0.0F;
         }
 
@@ -103,6 +104,10 @@ public class SmartTorsionBearingBlockEntity extends MechanicalBearingBlockEntity
                 this.level.getSignal(signalPos, side),
                 this.level.getSignal(signalPos, side.getOpposite())
         );
+    }
+
+    private float getWrappedTargetDelta() {
+        return normalizeAngle(getTargetAngle() - getDisplayedAngle());
     }
 
     private static float normalizeAngle(float angle) {
