@@ -1,9 +1,6 @@
 package dev.aviatorsofcreate.gearsandjets.content.jetengines;
 
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.exhaust.ExhaustBlock;
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.intake.IntakeBlock;
-import dev.aviatorsofcreate.gearsandjets.enums.MachineState;
 import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,21 +15,17 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public abstract class JetComponentBlock extends Block implements EntityBlock, IWrenchable {
 
     private final SableBlockWeight sableBlockWeight;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public static final EnumProperty<MachineState> MACHINE_STATE =
-            EnumProperty.create("machine_state", MachineState.class);
 
     protected JetComponentBlock(Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties);
@@ -49,8 +42,8 @@ public abstract class JetComponentBlock extends Block implements EntityBlock, IW
     }
 
     private static void collectAllBlocks(Level level, BlockPos thisPos, @Nullable Player player, ItemStack tool, ServerLevel serverLevel) {
-        for (JetComponentBlock block : getAttachedComponentsBothSides(level, thisPos, level.getBlockState(thisPos).getValue(FACING))) {
-
+        for (BlockPos blockPos : getJetEngineComponents(level, thisPos, level.getBlockState(thisPos).getValue(FACING))) {
+            collectThisBlock(level, blockPos, player, tool, serverLevel);
         }
     }
 
@@ -69,16 +62,14 @@ public abstract class JetComponentBlock extends Block implements EntityBlock, IW
         if (event.isCanceled()) {
             return InteractionResult.SUCCESS;
         }
+
         collectAllBlocks(level, pos, player, player.getMainHandItem(), serverLevel);
 
-        if (player != null && !player.isCreative()) {
+        if (!player.isCreative()) {
             Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos), player, context.getItemInHand())
                     .forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
         }
 
-        state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY, true);
-        level.destroyBlock(pos, false);
-        IWrenchable.playRemoveSound(level, pos);
         return InteractionResult.SUCCESS;
     }
 
@@ -88,47 +79,48 @@ public abstract class JetComponentBlock extends Block implements EntityBlock, IW
         return (facingAway instanceof JetComponentBlock || facing instanceof JetComponentBlock);
     }
 
-    private static ArrayList<BlockState> getAttachedComponentsRecursive(Level level, BlockPos pos, Direction direction, BlockState thisBlock) {
+    private static ArrayList<BlockPos> getAttachedComponentsRecursive(Level level, BlockPos pos, Direction direction, BlockPos thisBlock) {
 
-        BlockState nextComponent = level.getBlockState(pos.relative(direction));
-        ArrayList<BlockState> attachedAfter = new ArrayList<>();
+        BlockPos nextComponent = pos.relative(direction);
+        ArrayList<BlockPos> attachedAfter = new ArrayList<>();
         attachedAfter.add(thisBlock);
 
-        if (nextComponent.getBlock() instanceof JetComponentBlock) {
+        if (level.getBlockState(nextComponent).getBlock() instanceof JetComponentBlock) {
            attachedAfter.addAll(getAttachedComponentsRecursive(level, pos.relative(direction), direction, nextComponent));
         }
 
         return attachedAfter;
     }
 
-    protected static ArrayList<BlockState> getAttachedComponentsBothSides(Level level, BlockPos pos, Direction direction) {
-        BlockState front = level.getBlockState(pos.relative(direction));
-        BlockState back = level.getBlockState(pos.relative(direction.getOpposite()));
-        ArrayList<BlockState> attachedBack, attachedFront, attachedBoth = new ArrayList<>();
+    protected static ArrayList<BlockPos> getJetEngineComponents(Level level, BlockPos pos, Direction direction) {
+        BlockPos front = pos.relative(direction);
+        BlockPos back = pos.relative(direction.getOpposite());
+        ArrayList<BlockPos> attachedBack, attachedFront, attachedBoth = new ArrayList<>();
 
-        if (back.getBlock() instanceof JetComponentBlock block) {
+        attachedBoth.add(pos);
+
+        if (level.getBlockState(back).getBlock() instanceof JetComponentBlock) {
             attachedBack = getAttachedComponentsRecursive(level, pos.relative(direction.getOpposite()), direction.getOpposite(), back);
         } else attachedBack = null;
         attachedBoth.addAll(attachedBack);
 
-        if (front.getBlock() instanceof JetComponentBlock block) {
+        if (level.getBlockState(front).getBlock() instanceof JetComponentBlock) {
             attachedFront = getAttachedComponentsRecursive(level, pos.relative(direction), direction, front);
         } else attachedFront = null;
         attachedBoth.addAll(attachedFront);
         return (attachedBoth);
     }
 
-    private static void collectAttachedBlock(Level level, Block attachedBlock, @Nullable Player player, ItemStack tool, ServerLevel serverLevel) {
-        if (!(attachedBlock instanceof IntakeBlock) && !(attachedBlock instanceof ExhaustBlock)) {
-            return;
-        }
+    private static void collectThisBlock(Level level, BlockPos blockPos, @Nullable Player player, ItemStack tool, ServerLevel serverLevel) {
+        BlockState blockState = level.getBlockState(blockPos);
 
         if (player != null && !player.isCreative()) {
-            Block.getDrops(attachedState, serverLevel, attachedPos, level.getBlockEntity(attachedPos), player, tool)
+            Block.getDrops(blockState, serverLevel, blockPos, level.getBlockEntity(blockPos), player, tool)
                     .forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
         }
 
-        attachedState.spawnAfterBreak(serverLevel, attachedPos, ItemStack.EMPTY, true);
-        level.destroyBlock(attachedPos, false);
+        blockState.spawnAfterBreak(serverLevel, blockPos, ItemStack.EMPTY, true);
+        level.destroyBlock(blockPos, false);
+        IWrenchable.playRemoveSound(level, blockPos);
     }
 }
