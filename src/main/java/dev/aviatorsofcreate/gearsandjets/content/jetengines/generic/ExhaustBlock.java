@@ -1,5 +1,6 @@
-package dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.intake;
+package dev.aviatorsofcreate.gearsandjets.content.jetengines.generic;
 
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.JetComponentBlock;
 import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlock;
 import org.jetbrains.annotations.Nullable;
@@ -19,18 +20,14 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 
-public abstract class IntakeBlock extends Block {
+public abstract class ExhaustBlock extends JetComponentBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private final SableBlockWeight sableBlockWeight;
 
-    protected IntakeBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
-        super(properties);
+    protected ExhaustBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
+        super(properties, sableBlockWeight);
         this.sableBlockWeight = sableBlockWeight;
         registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-    }
-
-    public SableBlockWeight getSableBlockWeight() {
-        return sableBlockWeight;
     }
 
     @Override
@@ -55,21 +52,6 @@ public abstract class IntakeBlock extends Block {
                 : super.updateShape(state, facing, facingState, level, currentPos, facingPos);
     }
 
-    @Override
-    protected BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
-    }
-
-    @Override
-    protected BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(FACING)));
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
-
     private static @Nullable Direction findAttachmentFacing(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
         Direction clickedFace = context.getClickedFace();
@@ -86,11 +68,11 @@ public abstract class IntakeBlock extends Block {
         return null;
     }
 
-    private static boolean isValidCombustionChamber(LevelReader level, BlockPos intakePos, Direction facing) {
-        BlockPos chamberPos = intakePos.relative(facing.getOpposite());
+    private static boolean isValidCombustionChamber(LevelReader level, BlockPos exhaustPos, Direction facing) {
+        BlockPos chamberPos = exhaustPos.relative(facing.getOpposite());
         BlockState chamberState = level.getBlockState(chamberPos);
         return chamberState.getBlock() instanceof BasicCombustionChamberBlock
                 && chamberState.hasProperty(BasicCombustionChamberBlock.FACING)
-                && chamberState.getValue(BasicCombustionChamberBlock.FACING) == facing;
+                && chamberState.getValue(BasicCombustionChamberBlock.FACING) == facing.getOpposite();
     }
 }

@@ -1,5 +1,6 @@
-package dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.exhaust;
+package dev.aviatorsofcreate.gearsandjets.content.jetengines.generic;
 
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.JetComponentBlock;
 import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlock;
 import org.jetbrains.annotations.Nullable;
@@ -8,29 +9,21 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 
-public abstract class ExhaustBlock extends Block {
+public abstract class IntakeBlock extends JetComponentBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private final SableBlockWeight sableBlockWeight;
 
-    protected ExhaustBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
-        super(properties);
+    protected IntakeBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
+        super(properties, sableBlockWeight);
         this.sableBlockWeight = sableBlockWeight;
         registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-    }
-
-    public SableBlockWeight getSableBlockWeight() {
-        return sableBlockWeight;
     }
 
     @Override
@@ -40,29 +33,6 @@ public abstract class ExhaustBlock extends Block {
             return null;
         }
         return defaultBlockState().setValue(FACING, facing);
-    }
-
-    @Override
-    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        return isValidCombustionChamber(level, pos, state.getValue(FACING));
-    }
-
-    @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level,
-                                     BlockPos currentPos, BlockPos facingPos) {
-        return facing == state.getValue(FACING).getOpposite() && !state.canSurvive(level, currentPos)
-                ? Blocks.AIR.defaultBlockState()
-                : super.updateShape(state, facing, facingState, level, currentPos, facingPos);
-    }
-
-    @Override
-    protected BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
-    }
-
-    @Override
-    protected BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     @Override
@@ -86,11 +56,11 @@ public abstract class ExhaustBlock extends Block {
         return null;
     }
 
-    private static boolean isValidCombustionChamber(LevelReader level, BlockPos exhaustPos, Direction facing) {
-        BlockPos chamberPos = exhaustPos.relative(facing.getOpposite());
+    private static boolean isValidCombustionChamber(LevelReader level, BlockPos intakePos, Direction facing) {
+        BlockPos chamberPos = intakePos.relative(facing.getOpposite());
         BlockState chamberState = level.getBlockState(chamberPos);
         return chamberState.getBlock() instanceof BasicCombustionChamberBlock
                 && chamberState.hasProperty(BasicCombustionChamberBlock.FACING)
-                && chamberState.getValue(BasicCombustionChamberBlock.FACING) == facing.getOpposite();
+                && chamberState.getValue(BasicCombustionChamberBlock.FACING) == facing;
     }
 }

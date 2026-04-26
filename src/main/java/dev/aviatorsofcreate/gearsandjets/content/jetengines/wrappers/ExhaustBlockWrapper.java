@@ -3,8 +3,9 @@ package dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers;
 import java.util.Map;
 
 import dev.aviatorsofcreate.gearsandjets.content.BlockShapeHelper;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.exhaust.BasicExhaustBlock;
 import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.exhaust.ExhaustBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.generic.ExhaustBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -13,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ExhaustBlockWrapper extends ExhaustBlock {
+public class ExhaustBlockWrapper extends BasicExhaustBlock {
     private static final Map<Direction, VoxelShape> SHAPES = BlockShapeHelper.horizontalShapes(
             Direction.SOUTH,
             BlockShapeHelper.or(

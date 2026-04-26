@@ -1,6 +1,5 @@
 package dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers;
 
-import dev.aviatorsofcreate.gearsandjets.Config;
 import java.util.Map;
 
 import dev.aviatorsofcreate.gearsandjets.content.BlockShapeHelper;
