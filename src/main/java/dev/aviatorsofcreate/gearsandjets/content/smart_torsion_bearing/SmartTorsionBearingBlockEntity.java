@@ -17,6 +17,8 @@ import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
@@ -33,6 +35,7 @@ public class SmartTorsionBearingBlockEntity extends MechanicalBearingBlockEntity
     private static final float EPSILON = 0.001F;
 
     public ScrollValueBehaviour angleInput;
+    private float cachedTargetAngle;
 
     public SmartTorsionBearingBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -47,7 +50,12 @@ public class SmartTorsionBearingBlockEntity extends MechanicalBearingBlockEntity
     }
 
     public void onSignalChanged() {
+        this.cachedTargetAngle = computeTargetAngle();
+        if (this.running) {
+            this.applyRotation();
+        }
         setChanged();
+        sendData();
     }
 
     public void toggleAssembly() {
@@ -70,11 +78,10 @@ public class SmartTorsionBearingBlockEntity extends MechanicalBearingBlockEntity
         if (level == null) {
             return 0.0F;
         }
-
-        int positiveSignal = getControlSignal(SmartTorsionBearingBlock.getPositiveSignalDirection(this.getBlockState()));
-        int negativeSignal = getControlSignal(SmartTorsionBearingBlock.getNegativeSignalDirection(this.getBlockState()));
-        float normalized = Mth.clamp((positiveSignal - negativeSignal) / 15.0F, -1.0F, 1.0F);
-        return normalized * getMaxAngle();
+        if (!level.isClientSide) {
+            this.cachedTargetAngle = computeTargetAngle();
+        }
+        return this.cachedTargetAngle;
     }
 
     @Override
@@ -106,6 +113,17 @@ public class SmartTorsionBearingBlockEntity extends MechanicalBearingBlockEntity
         );
     }
 
+    private float computeTargetAngle() {
+        if (level == null) {
+            return 0.0F;
+        }
+
+        int positiveSignal = getControlSignal(SmartTorsionBearingBlock.getPositiveSignalDirection(this.getBlockState()));
+        int negativeSignal = getControlSignal(SmartTorsionBearingBlock.getNegativeSignalDirection(this.getBlockState()));
+        float normalized = Mth.clamp((positiveSignal - negativeSignal) / 15.0F, -1.0F, 1.0F);
+        return normalized * getMaxAngle();
+    }
+
     private float getWrappedTargetDelta() {
         return normalizeAngle(getTargetAngle() - getDisplayedAngle());
     }
@@ -119,6 +137,18 @@ public class SmartTorsionBearingBlockEntity extends MechanicalBearingBlockEntity
             angle += 360.0F;
         }
         return angle;
+    }
+
+    @Override
+    public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        compound.putFloat("CachedTargetAngle", this.cachedTargetAngle);
+        super.write(compound, registries, clientPacket);
+    }
+
+    @Override
+    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        this.cachedTargetAngle = compound.getFloat("CachedTargetAngle");
+        super.read(compound, registries, clientPacket);
     }
 
     public static class SmartTorsionBearingScrollValueBehaviour extends ScrollValueBehaviour {
