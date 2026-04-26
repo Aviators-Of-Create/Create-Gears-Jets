@@ -15,7 +15,7 @@ loaderVersion="${loader_version_range}" #mandatory
 license="${mod_license}"
 
 # A URL to refer people to when problems occur with this mod
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+issueTrackerURL="https://github.com/Aviators-Of-Create/Create-Gears-Jets/issues" #optional
 
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
@@ -42,7 +42,7 @@ logoFile="icon.png"
 #credits="" #optional
 
 # The authors of the mod, displayed in the mod UI (optional)
-authors="JxstFeli, Olivirus"
+authors="Aviators-Of-Create Team"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
@@ -91,7 +91,7 @@ config="${mod_id}.mixins.json"
 [[dependencies.${mod_id}]]
     modId="create"
     type="required"
-    versionRange="[${create_mod_version},)"
+    versionRange="[6.0.10,6.1.0)"
     ordering="NONE"
     side="BOTH"
 
