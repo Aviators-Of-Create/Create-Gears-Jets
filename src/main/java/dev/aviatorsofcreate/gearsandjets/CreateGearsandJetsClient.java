@@ -3,6 +3,7 @@ package dev.aviatorsofcreate.gearsandjets;
 import dev.aviatorsofcreate.gearsandjets.client.EngineIntakeParticleSpawner;
 import dev.aviatorsofcreate.gearsandjets.client.EngineParticleBridge;
 import dev.aviatorsofcreate.gearsandjets.client.ModPartialModels;
+import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_bearing.SmartTorsionBearingRenderer;
 import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_spring.SmartTorsionSpringRenderer;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import net.minecraft.client.Minecraft;
@@ -35,6 +36,10 @@ public class CreateGearsandJetsClient {
         event.enqueueWork(() -> BlockEntityRenderers.register(
                 ModBlockEntityTypes.SMART_TORSION_SPRING.get(),
                 SmartTorsionSpringRenderer::new
+        ));
+        event.enqueueWork(() -> BlockEntityRenderers.register(
+                ModBlockEntityTypes.SMART_TORSION_BEARING.get(),
+                SmartTorsionBearingRenderer::new
         ));
         // Some client setup code
         CreateGearsandJets.LOGGER.info("HELLO FROM CLIENT SETUP");

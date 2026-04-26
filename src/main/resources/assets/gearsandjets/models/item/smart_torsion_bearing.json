@@ -1,0 +1,8 @@
+{
+  "parent": "gearsandjets:block/bearing/item",
+  "textures": {
+    "back": "gearsandjets:block/gearbox",
+    "side": "gearsandjets:block/mechanical_bearing_side",
+    "top": "gearsandjets:block/bearing_top"
+  }
+}

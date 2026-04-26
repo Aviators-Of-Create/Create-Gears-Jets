@@ -5,8 +5,10 @@
   "block.gearsandjets.simple_exhaust": "Simple Exhaust",
   "block.gearsandjets.airplane_seat": "Airplane Seat",
   "block.gearsandjets.smart_torsion_spring": "Smart Torsion Spring",
+  "block.gearsandjets.smart_torsion_bearing": "Smart Torsion Bearing",
   "item.gearsandjets.example_item": "Example Item",
   "gearsandjets.smart_torsion_spring.angle_limit": "Max Angle",
+  "gearsandjets.smart_torsion_bearing.angle_limit": "Max Angle",
 
   "gearsandjets.configuration.title": "Create: Gears and Jets Configs",
   "gearsandjets.configuration.section.gearsandjets.common.toml": "Create: Gears and Jets Configs",

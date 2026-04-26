@@ -5,6 +5,7 @@ import dev.aviatorsofcreate.gearsandjets.content.ModBlocks;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlock;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.exhaust.ExhaustBlock;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.intake.IntakeBlock;
+import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_bearing.SmartTorsionBearingBlockEntity;
 import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_spring.SmartTorsionSpringBlockEntity;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -39,6 +40,14 @@ public final class ModBlockEntityTypes {
                             ModBlocks.SMART_TORSION_SPRING.get()
                     ).build(null)
             );
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SmartTorsionBearingBlockEntity>> SMART_TORSION_BEARING =
+            BLOCK_ENTITY_TYPES.register(
+                    "smart_torsion_bearing",
+                    () -> BlockEntityType.Builder.of(
+                            (pos, state) -> new SmartTorsionBearingBlockEntity(getSmartTorsionBearingType(), pos, state),
+                            ModBlocks.SMART_TORSION_BEARING.get()
+                    ).build(null)
+            );
 
     private ModBlockEntityTypes() {
     }
@@ -71,6 +80,10 @@ public final class ModBlockEntityTypes {
 
     private static BlockEntityType<SmartTorsionSpringBlockEntity> getSmartTorsionSpringType() {
         return SMART_TORSION_SPRING.get();
+    }
+
+    private static BlockEntityType<SmartTorsionBearingBlockEntity> getSmartTorsionBearingType() {
+        return SMART_TORSION_BEARING.get();
     }
 
     private static BasicCombustionChamberBlockEntity getAttachedCombustionChamber(Level level, BlockPos pos, BlockState state) {

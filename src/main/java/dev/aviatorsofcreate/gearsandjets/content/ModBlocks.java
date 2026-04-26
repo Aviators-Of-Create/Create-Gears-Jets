@@ -4,6 +4,7 @@ import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers.CombustionChamberBlockWrapper;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers.ExhaustBlockWrapper;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.wrappers.IntakeBlockWrapper;
+import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_bearing.SmartTorsionBearingBlock;
 import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_spring.SmartTorsionSpringBlock;
 import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -41,6 +42,14 @@ public final class ModBlocks {
     public static final DeferredBlock<SmartTorsionSpringBlock> SMART_TORSION_SPRING = BLOCKS.register(
             "smart_torsion_spring",
             () -> new SmartTorsionSpringBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.STONE)
+                    .strength(2.0F)
+                    .sound(SoundType.METAL)
+                    .noOcclusion())
+    );
+    public static final DeferredBlock<SmartTorsionBearingBlock> SMART_TORSION_BEARING = BLOCKS.register(
+            "smart_torsion_bearing",
+            () -> new SmartTorsionBearingBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.STONE)
                     .strength(2.0F)
                     .sound(SoundType.METAL)
