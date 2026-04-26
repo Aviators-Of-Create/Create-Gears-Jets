@@ -30,8 +30,8 @@ Together, the intake, combustion chamber, and exhaust form a simple jet-engine m
 - Minecraft `1.21.1`
 - Java `21`
 - NeoForge `21.1.225+`
-- Create `6.0.9+`
-- Sable `1.0.4+`
+- Create `6.0.10+`
+- Sable `1.0.4`
 - Recommended for packs built around Create: Aeronautics
 
 ## Getting Started
