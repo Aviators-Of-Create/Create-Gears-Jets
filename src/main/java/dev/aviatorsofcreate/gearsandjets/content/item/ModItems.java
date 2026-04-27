@@ -22,6 +22,8 @@ public final class ModItems {
             registerBlockItem("smart_torsion_spring", ModBlocks.SMART_TORSION_SPRING);
     public static final DeferredItem<BlockItem> SMART_TORSION_BEARING =
             registerBlockItem("smart_torsion_bearing", ModBlocks.SMART_TORSION_BEARING);
+    public static final DeferredItem<BlockItem> AFTERBURNING_EXHAUST =
+            registerBlockItem("afterburning_exhaust", ModBlocks.AFTERBURNING_EXHAUST);
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

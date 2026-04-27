@@ -21,9 +21,8 @@ import static dev.aviatorsofcreate.gearsandjets.content.jetengines.generic.Exhau
 
 public abstract class ExhaustBlockEntity extends JetComponentBlockEntity implements BlockEntityPropeller, BlockEntitySubLevelPropellerActor {
 
-    private double thrust = 0;
-    ArrayList<BlockPos> jetComponents;
-    private boolean active = false;
+    protected double thrust = 0;
+    protected boolean active = false;
 
     public ExhaustBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -71,7 +70,6 @@ public abstract class ExhaustBlockEntity extends JetComponentBlockEntity impleme
 
         int fuelConsumed = 0;
         if (chamberPos != null && level != null && level.getBlockState(chamberPos).getBlock() instanceof BasicCombustionChamberBlock) {
-            // TODO: Get thrust and activity from the combustion chamber here, also deal with particles
             CombustionChamberBlockEntity chamberEntity = level.getBlockEntity(chamberPos, ModBlockEntityTypes.BASIC_COMBUSTION_CHAMBER.get()).get();
             this.thrust = chamberEntity.getThrustFromExhaust();
             this.active = chamberEntity.getActive();

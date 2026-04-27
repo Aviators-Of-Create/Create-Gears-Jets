@@ -43,6 +43,10 @@ public interface IEngine {
         return FuelType.getTypeFor(self().getLevel().registryAccess().lookupOrThrow(Registries.FUEL_TYPE), fs().getFluid()).soundPitchMultiplier();
     }
 
+    default float getAfterburnerMultiplier() {
+        return FuelType.getTypeFor(self().getLevel().registryAccess().lookupOrThrow(Registries.FUEL_TYPE), fs().getFluid()).afterburnerMultiplier();
+    }
+
     int getRemainingTicks();
 
     SmartBlockEntity self();

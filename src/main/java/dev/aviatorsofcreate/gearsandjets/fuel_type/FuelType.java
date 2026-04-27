@@ -10,21 +10,28 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 
-public record FuelType(HolderSet<Fluid> fluid, PerEngineProperties basic, float soundPitchMultiplier) {
+public record FuelType(HolderSet<Fluid> fluid, PerEngineProperties basic, float afterburnerMultiplier, float soundPitchMultiplier) {
 
     public static final Codec<FuelType> CODEC = RecordCodecBuilder.create(i -> i.group(
             RegistryCodecs.homogeneousList(Registries.FLUID).fieldOf("fluid").forGetter(FuelType::fluid),
             PerEngineProperties.CODEC.fieldOf("basic").forGetter(FuelType::basic),
+            Codec.FLOAT.fieldOf("afterburner_multiplier").forGetter(FuelType::afterburnerMultiplier),
             Codec.FLOAT.optionalFieldOf("pitch_multiplier", 1f).forGetter(FuelType::soundPitchMultiplier)
     ).apply(i, FuelType::new));
 
     public static final Codec<FuelType> NCODEC = RecordCodecBuilder.create(i -> i.group(
             RegistryCodecs.homogeneousList(Registries.FLUID).fieldOf("fluid").forGetter(FuelType::fluid),
             PerEngineProperties.CODEC.fieldOf("basic").forGetter(FuelType::basic),
+            Codec.FLOAT.fieldOf("afterburner_multiplier").forGetter(FuelType::afterburnerMultiplier),
             Codec.FLOAT.optionalFieldOf("pitch_multiplier", 1f).forGetter(FuelType::soundPitchMultiplier)
     ).apply(i, FuelType::new));
 
-    public static final FuelType EMPTY = new FuelType(null, new PerEngineProperties(0, 0, 0), 0);
+    public static final FuelType EMPTY = new FuelType(
+            null,
+            new PerEngineProperties(0, 0, 0),
+            0,
+            0
+    );
 
     @SuppressWarnings("deprecation")
     public static FuelType getTypeFor(HolderLookup.RegistryLookup<FuelType> registry, Fluid fluid) {

@@ -12,7 +12,7 @@ import static dev.aviatorsofcreate.gearsandjets.content.jetengines.generic.JetCo
 
 public abstract class JetComponentBlockEntity extends SmartBlockEntity {
 
-    private ArrayList<BlockPos> jetComponents;
+    protected ArrayList<BlockPos> jetComponents;
 
     public JetComponentBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
