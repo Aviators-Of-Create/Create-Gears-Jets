@@ -1,4 +1,4 @@
-package dev.aviatorsofcreate.gearsandjets.content.jetengines;
+package dev.aviatorsofcreate.gearsandjets.content.jetengines.generic;
 
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
@@ -12,6 +12,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -20,10 +21,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public abstract class JetComponentBlock extends Block implements IWrenchable {
+public abstract class JetComponentBlock extends Block implements IWrenchable, EntityBlock {
 
     private final SableBlockWeight sableBlockWeight;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    ArrayList<BlockPos> jetComponents = new ArrayList<>();
 
 
     protected JetComponentBlock(Properties properties, SableBlockWeight sableBlockWeight) {
@@ -50,7 +52,7 @@ public abstract class JetComponentBlock extends Block implements IWrenchable {
             return;
         }
 
-        for (BlockPos blockPos : getJetEngineComponents(level, pos, level.getBlockState(pos).getValue(FACING))) {
+        for (BlockPos blockPos : getJetEngineComponents(level, pos, state.getValue(FACING))) {
             collectThisBlock(level, blockPos, player, serverLevel, tool);
         }
 

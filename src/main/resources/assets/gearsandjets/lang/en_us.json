@@ -1,12 +1,11 @@
 {
   "itemGroup.gearsandjets": "Create: Gears and Jets",
-  "block.gearsandjets.simple_intake": "Simple Intake",
-  "block.gearsandjets.simple_combustion_chamber": "Simple Combustion Chamber",
-  "block.gearsandjets.simple_exhaust": "Simple Exhaust",
+  "block.gearsandjets.basic_intake": "Basic Intake",
+  "block.gearsandjets.basic_combustion_chamber": "Basic Combustion Chamber",
+  "block.gearsandjets.basic_exhaust": "Basic Exhaust",
   "block.gearsandjets.airplane_seat": "Airplane Seat",
   "block.gearsandjets.smart_torsion_spring": "Smart Torsion Spring",
   "block.gearsandjets.smart_torsion_bearing": "Smart Torsion Bearing",
-  "item.gearsandjets.example_item": "Example Item",
   "gearsandjets.smart_torsion_spring.angle_limit": "Max Angle",
   "gearsandjets.smart_torsion_bearing.angle_limit": "Max Angle",
 

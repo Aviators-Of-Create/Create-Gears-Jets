@@ -19,6 +19,7 @@ public final class ModCreativeModeTabs {
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.gearsandjets"))
                     .withTabsBefore(CreativeModeTabs.COMBAT)
+                    .icon(() -> ModBlocks.BASIC_COMBUSTION_CHAMBER.asItem().getDefaultInstance())
                     .displayItems((parameters, output) ->
                             ModItems.ITEMS.getEntries().forEach(item -> output.accept(item.get())))
                     .build()

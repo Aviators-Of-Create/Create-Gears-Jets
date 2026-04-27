@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "gearsandjets:simple_intake"
+          "name": "gearsandjets:basic_combustion_chamber"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "gearsandjets:blocks/simple_intake"
+  "random_sequence": "gearsandjets:blocks/basic_combustion_chamber"
 }

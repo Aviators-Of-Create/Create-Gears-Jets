@@ -1,5 +1,5 @@
 {
-  "parent": "gearsandjets:block/simple_intake",
+  "parent": "gearsandjets:block/basic_intake",
   "display": {
     "thirdperson_righthand": {
       "rotation": [75, 45, 0],

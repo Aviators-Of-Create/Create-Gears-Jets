@@ -1,9 +1,9 @@
 {
   "replace": false,
   "values": [
-    "gearsandjets:simple_intake",
-    "gearsandjets:simple_combustion_chamber",
-    "gearsandjets:simple_exhaust",
+    "gearsandjets:basic_intake",
+    "gearsandjets:basic_combustion_chamber",
+    "gearsandjets:basic_exhaust",
     "gearsandjets:airplane_seat"
   ]
 }

@@ -1,47 +1,34 @@
 package dev.aviatorsofcreate.gearsandjets.content.jetengines.generic;
 
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.JetComponentBlock;
 import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlock;
+import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 
 public abstract class ExhaustBlock extends JetComponentBlock {
+
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private final SableBlockWeight sableBlockWeight;
 
     protected ExhaustBlock(BlockBehaviour.Properties properties, SableBlockWeight sableBlockWeight) {
         super(properties, sableBlockWeight);
         this.sableBlockWeight = sableBlockWeight;
-        registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction facing = findAttachmentFacing(context);
-        if (facing == null) {
-            return null;
-        }
-        return defaultBlockState().setValue(FACING, facing);
     }
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        return isValidCombustionChamber(level, pos, state.getValue(FACING));
+        return canConnectExhaustTo(level, pos, state.getValue(FACING));
     }
 
     @Override
@@ -52,15 +39,15 @@ public abstract class ExhaustBlock extends JetComponentBlock {
                 : super.updateShape(state, facing, facingState, level, currentPos, facingPos);
     }
 
-    private static @Nullable Direction findAttachmentFacing(BlockPlaceContext context) {
+    private @Nullable Direction findAttachmentFacing(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
         Direction clickedFace = context.getClickedFace();
-        if (clickedFace.getAxis().isHorizontal() && isValidCombustionChamber(context.getLevel(), pos, clickedFace)) {
+        if (clickedFace.getAxis().isHorizontal() && canConnectExhaustTo(context.getLevel(), pos, clickedFace)) {
             return clickedFace;
         }
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {
-            if (direction != clickedFace && isValidCombustionChamber(context.getLevel(), pos, direction)) {
+            if (direction != clickedFace && canConnectExhaustTo(context.getLevel(), pos, direction)) {
                 return direction;
             }
         }
@@ -68,11 +55,14 @@ public abstract class ExhaustBlock extends JetComponentBlock {
         return null;
     }
 
-    private static boolean isValidCombustionChamber(LevelReader level, BlockPos exhaustPos, Direction facing) {
-        BlockPos chamberPos = exhaustPos.relative(facing.getOpposite());
-        BlockState chamberState = level.getBlockState(chamberPos);
-        return chamberState.getBlock() instanceof BasicCombustionChamberBlock
-                && chamberState.hasProperty(BasicCombustionChamberBlock.FACING)
-                && chamberState.getValue(BasicCombustionChamberBlock.FACING) == facing.getOpposite();
+    private boolean canConnectExhaustTo(LevelReader level, BlockPos exhaustPos, Direction facing) {
+        BlockState nextBlock = level.getBlockState(exhaustPos.relative(facing.getOpposite()));
+
+        // TODO: Edit if statement once turbines are added
+        if (nextBlock.getBlock() instanceof CombustionChamberBlock) {
+            return (nextBlock.getValue(FACING) == facing.getOpposite());
+        }
+
+        return false;
     }
 }

@@ -1,21 +1,21 @@
 {
   "variants": {
     "facing=east": {
-      "model": "gearsandjets:block/simple_exhaust",
+      "model": "gearsandjets:block/basic_intake",
       "y": 270,
       "uvlock": true
     },
     "facing=north": {
-      "model": "gearsandjets:block/simple_exhaust",
+      "model": "gearsandjets:block/basic_intake",
       "y": 180,
       "uvlock": true
     },
     "facing=south": {
-      "model": "gearsandjets:block/simple_exhaust",
+      "model": "gearsandjets:block/basic_intake",
       "uvlock": true
     },
     "facing=west": {
-      "model": "gearsandjets:block/simple_exhaust",
+      "model": "gearsandjets:block/basic_intake",
       "y": 90,
       "uvlock": true
     }

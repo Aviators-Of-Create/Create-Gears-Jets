@@ -1,21 +1,21 @@
 {
   "variants": {
     "facing=north": {
-      "model": "gearsandjets:block/simple_combustion_chamber",
+      "model": "gearsandjets:block/basic_combustion_chamber",
       "uvlock": true
     },
     "facing=east": {
-      "model": "gearsandjets:block/simple_combustion_chamber",
+      "model": "gearsandjets:block/basic_combustion_chamber",
       "y": 90,
       "uvlock": true
     },
     "facing=south": {
-      "model": "gearsandjets:block/simple_combustion_chamber",
+      "model": "gearsandjets:block/basic_combustion_chamber",
       "y": 180,
       "uvlock": true
     },
     "facing=west": {
-      "model": "gearsandjets:block/simple_combustion_chamber",
+      "model": "gearsandjets:block/basic_combustion_chamber",
       "y": 270,
       "uvlock": true
     }

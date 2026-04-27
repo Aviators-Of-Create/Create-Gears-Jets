@@ -14,7 +14,7 @@ import com.simibubi.create.api.stress.BlockStressValues;
 import com.simibubi.create.content.contraptions.actors.seat.SeatInteractionBehaviour;
 import com.simibubi.create.content.contraptions.actors.seat.SeatMovementBehaviour;
 import dev.aviatorsofcreate.gearsandjets.content.item.ModItems;
-import dev.aviatorsofcreate.gearsandjets.content.ModBlocks;
+import dev.aviatorsofcreate.gearsandjets.registry.ModBlocks;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import dev.aviatorsofcreate.gearsandjets.registry.ModCreativeModeTabs;
 import net.minecraft.core.registries.BuiltInRegistries;

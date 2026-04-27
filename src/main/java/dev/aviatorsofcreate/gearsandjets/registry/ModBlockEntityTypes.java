@@ -1,18 +1,13 @@
 package dev.aviatorsofcreate.gearsandjets.registry;
 
 import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
-import dev.aviatorsofcreate.gearsandjets.content.ModBlocks;
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlock;
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.generic.ExhaustBlock;
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.generic.IntakeBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.exhaust.BasicExhaustBlockEntity;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.intake.BasicIntakeBlockEntity;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.special.exhaust.afterburning.AfterburningExhaustBlockEntity;
 import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_bearing.SmartTorsionBearingBlockEntity;
 import dev.aviatorsofcreate.gearsandjets.content.smart_torsion_spring.SmartTorsionSpringBlockEntity;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlockEntity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -24,12 +19,12 @@ public final class ModBlockEntityTypes {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, CreateGearsandJets.MODID);
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BasicCombustionChamberBlockEntity>> COMBUSTION_CHAMBER =
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BasicCombustionChamberBlockEntity>> BASIC_COMBUSTION_CHAMBER =
             BLOCK_ENTITY_TYPES.register(
-                    "combustion_chamber",
+                    "basic_combustion_chamber",
                     () -> BlockEntityType.Builder.of(
                             (pos, state) -> new BasicCombustionChamberBlockEntity(getCombustionChamberType(), pos, state),
-                            ModBlocks.SIMPLE_COMBUSTION_CHAMBER.get()
+                            ModBlocks.BASIC_COMBUSTION_CHAMBER.get()
                     ).build(null)
             );
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SmartTorsionSpringBlockEntity>> SMART_TORSION_SPRING =
@@ -48,9 +43,30 @@ public final class ModBlockEntityTypes {
                             ModBlocks.SMART_TORSION_BEARING.get()
                     ).build(null)
             );
-
-    private ModBlockEntityTypes() {
-    }
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BasicIntakeBlockEntity>> BASIC_INTAKE =
+            BLOCK_ENTITY_TYPES.register(
+                    "basic_intake",
+                    () -> BlockEntityType.Builder.of(
+                            (pos, state) -> new BasicIntakeBlockEntity(getIntakeType(), pos, state),
+                            ModBlocks.BASIC_INTAKE.get()
+                    ).build(null)
+            );
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BasicExhaustBlockEntity>> BASIC_EXHAUST =
+            BLOCK_ENTITY_TYPES.register(
+                    "basic_exhaust",
+                    () -> BlockEntityType.Builder.of(
+                            (pos, state) -> new BasicExhaustBlockEntity(getBasicExhaustType(), pos, state),
+                            ModBlocks.BASIC_EXHAUST.get()
+                    ).build(null)
+            );
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AfterburningExhaustBlockEntity>> AFTERBURNING_EXHAUST =
+            BLOCK_ENTITY_TYPES.register(
+                    "afterburning_exhaust",
+                    () -> BlockEntityType.Builder.of(
+                            (pos, state) ->  new AfterburningExhaustBlockEntity(getAfterburningExhaustType(), pos, state),
+                            ModBlocks.AFTERBURNING_EXHAUST.get()
+                    ).build(null)
+            );
 
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITY_TYPES.register(eventBus);
@@ -60,22 +76,13 @@ public final class ModBlockEntityTypes {
     private static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
-                COMBUSTION_CHAMBER.get(),
-                (blockEntity, side) -> blockEntity.getFluidHandler()
-        );
-        event.registerBlock(
-                Capabilities.FluidHandler.BLOCK,
-                (level, pos, state, blockEntity, side) -> {
-                    BasicCombustionChamberBlockEntity chamber = getAttachedCombustionChamber(level, pos, state);
-                    return chamber != null ? chamber.getFluidHandler() : null;
-                },
-                ModBlocks.SIMPLE_INTAKE.get(),
-                ModBlocks.SIMPLE_EXHAUST.get()
+                BASIC_COMBUSTION_CHAMBER.get(),
+                (blockEntity, side) -> blockEntity.getTank()
         );
     }
 
     private static BlockEntityType<BasicCombustionChamberBlockEntity> getCombustionChamberType() {
-        return COMBUSTION_CHAMBER.get();
+        return BASIC_COMBUSTION_CHAMBER.get();
     }
 
     private static BlockEntityType<SmartTorsionSpringBlockEntity> getSmartTorsionSpringType() {
@@ -86,28 +93,15 @@ public final class ModBlockEntityTypes {
         return SMART_TORSION_BEARING.get();
     }
 
-    private static BasicCombustionChamberBlockEntity getAttachedCombustionChamber(Level level, BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof IntakeBlock && state.hasProperty(IntakeBlock.FACING)) {
-            Direction facing = state.getValue(IntakeBlock.FACING);
-            return getCombustionChamber(level, pos.relative(facing.getOpposite()), facing);
-        }
-
-        if (state.getBlock() instanceof ExhaustBlock && state.hasProperty(ExhaustBlock.FACING)) {
-            Direction facing = state.getValue(ExhaustBlock.FACING);
-            return getCombustionChamber(level, pos.relative(facing.getOpposite()), facing.getOpposite());
-        }
-
-        return null;
+    private static BlockEntityType<BasicIntakeBlockEntity> getIntakeType() {
+        return BASIC_INTAKE.get();
     }
 
-    private static BasicCombustionChamberBlockEntity getCombustionChamber(Level level, BlockPos chamberPos, Direction expectedFacing) {
-        BlockState chamberState = level.getBlockState(chamberPos);
-        if (!(chamberState.getBlock() instanceof BasicCombustionChamberBlock)
-                || !chamberState.hasProperty(BasicCombustionChamberBlock.FACING)
-                || chamberState.getValue(BasicCombustionChamberBlock.FACING) != expectedFacing) {
-            return null;
-        }
+    private static BlockEntityType<BasicExhaustBlockEntity> getBasicExhaustType() {
+        return BASIC_EXHAUST.get();
+    }
 
-        return level.getBlockEntity(chamberPos) instanceof BasicCombustionChamberBlockEntity chamber ? chamber : null;
+    private static BlockEntityType<AfterburningExhaustBlockEntity> getAfterburningExhaustType() {
+        return AFTERBURNING_EXHAUST.get();
     }
 }

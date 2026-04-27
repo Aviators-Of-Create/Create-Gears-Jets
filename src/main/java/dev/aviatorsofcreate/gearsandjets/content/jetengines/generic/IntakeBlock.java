@@ -1,17 +1,17 @@
 package dev.aviatorsofcreate.gearsandjets.content.jetengines.generic;
 
-import dev.aviatorsofcreate.gearsandjets.content.jetengines.JetComponentBlock;
+import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.intake.BasicIntakeBlockEntity;
 import dev.aviatorsofcreate.gearsandjets.enums.SableBlockWeight;
 import dev.aviatorsofcreate.gearsandjets.content.jetengines.full.basic.combustion.BasicCombustionChamberBlock;
+import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.LevelReader;
@@ -24,20 +24,6 @@ public abstract class IntakeBlock extends JetComponentBlock {
         super(properties, sableBlockWeight);
         this.sableBlockWeight = sableBlockWeight;
         registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction facing = findAttachmentFacing(context);
-        if (facing == null) {
-            return null;
-        }
-        return defaultBlockState().setValue(FACING, facing);
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
     }
 
     private static @Nullable Direction findAttachmentFacing(BlockPlaceContext context) {

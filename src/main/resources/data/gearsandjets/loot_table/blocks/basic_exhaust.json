@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "gearsandjets:simple_exhaust"
+          "name": "gearsandjets:basic_exhaust"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "gearsandjets:blocks/simple_exhaust"
+  "random_sequence": "gearsandjets:blocks/basic_exhaust"
 }
