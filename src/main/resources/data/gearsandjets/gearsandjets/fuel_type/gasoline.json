@@ -5,5 +5,11 @@
     "thrust": 300,
     "burn_rate": 5,
     "startup_cost": 25
-  }
+  },
+  "improved": {
+    "thrust": 300,
+    "burn_rate": 5,
+    "startup_cost": 25
+  },
+  "afterburner": 2
 }
