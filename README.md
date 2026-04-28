@@ -32,6 +32,7 @@ Together, the intake, combustion chamber, and exhaust form a simple jet-engine m
 - NeoForge `21.1.225+`
 - Create `6.0.10+`
 - Sable `1.0.4`
+- Aeronautics `1.1.0`
 - Recommended for packs built around Create: Aeronautics
 
 ## Getting Started
@@ -42,6 +43,7 @@ Together, the intake, combustion chamber, and exhaust form a simple jet-engine m
 2. Add the required dependencies to your `mods` folder:
    - Create
    - Sable
+   - Aeronautics
 3. Add the `Create: Gears and Jets` jar.
 4. For the aircraft-focused experience this add-on is designed around, also include your Create: Aeronautics setup.
 
