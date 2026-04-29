@@ -1,7 +1,6 @@
-package dev.aviatorsofcreate.gearsandjets.content.item;
+package dev.aviatorsofcreate.gearsandjets.registry;
 
 import dev.aviatorsofcreate.gearsandjets.CreateGearsandJets;
-import dev.aviatorsofcreate.gearsandjets.registry.ModBlocks;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.BlockItem;
 import net.neoforged.bus.api.IEventBus;

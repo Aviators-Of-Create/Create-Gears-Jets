@@ -13,7 +13,7 @@ import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.api.stress.BlockStressValues;
 import com.simibubi.create.content.contraptions.actors.seat.SeatInteractionBehaviour;
 import com.simibubi.create.content.contraptions.actors.seat.SeatMovementBehaviour;
-import dev.aviatorsofcreate.gearsandjets.content.item.ModItems;
+import dev.aviatorsofcreate.gearsandjets.registry.ModItems;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlocks;
 import dev.aviatorsofcreate.gearsandjets.registry.ModBlockEntityTypes;
 import dev.aviatorsofcreate.gearsandjets.registry.ModCreativeModeTabs;
@@ -73,10 +73,6 @@ public class CreateGearsandJets {
             BlockStressValues.IMPACTS.register(ModBlocks.SMART_TORSION_SPRING.get(), () -> 16.0D);
             BlockStressValues.CAPACITIES.register(ModBlocks.SMART_TORSION_SPRING.get(), () -> 8.0D);
         });
-
-        if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
-            LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
-        }
 
         LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
 

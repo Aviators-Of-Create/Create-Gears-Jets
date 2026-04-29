@@ -21,7 +21,7 @@ public class AfterburningExhaustBlockEntity extends ExhaustBlockEntity implement
 
     private SmartFluidTankBehaviour tank;
     private int signal = 0;
-    private float afterburnerMultiplier = 0;
+    private float afterburnerMultiplier = 1;
 
     public AfterburningExhaustBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -31,11 +31,6 @@ public class AfterburningExhaustBlockEntity extends ExhaustBlockEntity implement
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         tank = SmartFluidTankBehaviour.single(this, 500);
         behaviours.add(tank);
-    }
-
-    @Override
-    public double getThrust() {
-        return super.getThrust() * this.afterburnerMultiplier;
     }
 
     @Override
@@ -50,7 +45,7 @@ public class AfterburningExhaustBlockEntity extends ExhaustBlockEntity implement
 
     @Override
     public FluidTank getTank() {
-        return this.tank.getPrimaryHandler();
+        return tank.getPrimaryHandler();
     }
 
     @Override
