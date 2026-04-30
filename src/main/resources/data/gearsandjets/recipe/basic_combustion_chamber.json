@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "#c:ingots/zinc"
+    },
+    "N": {
+      "item": "#c:nuggets/zinc"
+    },
+    "E": {
+      "item": "create:empty_blaze_burner"
+    },
+    "F": {
+      "item": "#c:tools/igniter"
+    },
+    "B": {
+      "item": "#c:blocks/zinc"
+    }
+  },
+  "pattern": [
+    "NFN",
+    "IEI",
+    "IBI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "gearsandjets:basic_combustion_chamber"
+  }
+}

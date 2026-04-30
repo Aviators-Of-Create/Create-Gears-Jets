@@ -29,7 +29,7 @@ public record FuelType(HolderSet<Fluid> fluid, PerEngineProperties basic, float 
     public static final FuelType EMPTY = new FuelType(
             null,
             new PerEngineProperties(0, 0, 0),
-            0,
+            1,
             0
     );
 

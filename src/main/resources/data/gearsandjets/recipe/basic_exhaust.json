@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "#c:ingots/zinc"
+    },
+    "N": {
+      "item": "#c:nuggets/zinc"
+    }
+  },
+  "pattern": [
+    "NNN",
+    "N I",
+    "NNN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "gearsandjets:basic_exhaust"
+  }
+}
