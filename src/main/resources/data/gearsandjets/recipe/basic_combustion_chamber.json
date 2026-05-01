@@ -2,26 +2,23 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "tag": "#c:ingots/zinc"
+    "A": {
+      "tag": "c:ingots/andesite_alloy"
     },
-    "N": {
-      "tag": "#c:nuggets/zinc"
-    },
-    "E": {
-      "item": "create:empty_blaze_burner"
-    },
-    "F": {
-      "tag": "#c:tools/igniter"
+    "S": {
+      "tag": "c:plates/iron"
     },
     "B": {
-      "tag": "#c:blocks/zinc"
+      "item": "create:blaze_burner"
+    },
+    "T": {
+      "item": "create:fluid_tank"
     }
   },
   "pattern": [
-    "NFN",
-    "IEI",
-    "IBI"
+    "ASA",
+    "TBT",
+    "ASA"
   ],
   "result": {
     "count": 1,

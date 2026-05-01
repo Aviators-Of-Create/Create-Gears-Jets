@@ -1,9 +1,9 @@
 {
-  "fluid": "#c:biodiesel",
+  "fluid": "#c:lpg",
   "pitch_multiplier": 1.5,
   "basic": {
     "thrust": 125,
-    "burn_rate": 8,
+    "burn_rate": 5,
     "startup_cost": 25
   },
   "improved": {

@@ -5,13 +5,13 @@
     "B": {
       "item": "create:mechanical_bearing"
     },
-    "R": {
-      "item": "minecraft:redstone"
+    "T": {
+      "item": "create:electron_tube"
     }
   },
   "pattern": [
     "B",
-    "R"
+    "T"
   ],
   "result": {
     "count": 1,

@@ -3,7 +3,7 @@
   "pitch_multiplier": 1.5,
   "basic": {
     "thrust": 125,
-    "burn_rate": 5,
+    "burn_rate": 8,
     "startup_cost": 25
   },
   "improved": {

@@ -1,15 +1,15 @@
 {
-  "fluid": "#c:biodiesel",
+  "fluid": "#c:kerosene",
   "pitch_multiplier": 1.5,
   "basic": {
-    "thrust": 125,
+    "thrust": 250,
     "burn_rate": 8,
     "startup_cost": 25
   },
   "improved": {
-    "thrust": 200,
+    "thrust": 350,
     "burn_rate": 5,
     "startup_cost": 25
   },
-  "afterburner_multiplier": 1.3
+  "afterburner_multiplier": 1.8
 }

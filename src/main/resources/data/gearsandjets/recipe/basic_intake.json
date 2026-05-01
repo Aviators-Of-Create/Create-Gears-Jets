@@ -1,16 +1,27 @@
 {
-  "type": "create:item_application",
-  "ingredients": [
-    {
-      "item": "create:zinc_block"
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/andesite_alloy"
     },
-    {
+    "S": {
+      "tag": "c:plates/iron"
+    },
+    "P": {
       "item": "create:propeller"
+    },
+    "C": {
+      "item": "create:chute"
     }
+  },
+  "pattern": [
+    "SA",
+    "PC",
+    "SA"
   ],
-  "results": [
-    {
-      "item": "gearsandjets:basic_intake"
-    }
-  ]
+  "result": {
+    "count": 1,
+    "id": "gearsandjets:basic_intake"
+  }
 }

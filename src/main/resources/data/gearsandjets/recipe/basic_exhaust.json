@@ -2,17 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "tag": "#c:ingots/zinc"
+    "A": {
+      "tag": "c:ingots/andesite_alloy"
     },
-    "N": {
-      "tag": "#c:nuggets/zinc"
+    "S": {
+      "tag": "c:plates/iron"
+    },
+    "C": {
+      "item": "create:chute"
     }
   },
   "pattern": [
-    "NNN",
-    "N I",
-    "NNN"
+    "ASS",
+    "CC ",
+    "ASS"
   ],
   "result": {
     "count": 1,

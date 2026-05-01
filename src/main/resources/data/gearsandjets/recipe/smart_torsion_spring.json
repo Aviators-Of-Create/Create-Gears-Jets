@@ -8,14 +8,14 @@
     "C": {
       "item": "create:andesite_casing"
     },
-    "R": {
-      "item": "minecraft:redstone"
+    "T": {
+      "item": "create:electron_tube"
     }
   },
   "pattern": [
     "A",
-    "R",
-    "C"
+    "C",
+    "T"
   ],
   "result": {
     "count": 1,
